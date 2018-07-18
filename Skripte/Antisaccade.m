@@ -1,41 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   This function creates a block of trials for an anti-saccade task. A single
-%   trial consists of a display of an Ebbinghaus stimulus, alongside a
-%   probe cirlce whose size is varied with the aim to match its size with
-%   the size of the central circle in the Ebbinghaus stimulus.
-%
-%   Images for the items to be displayed should be stored on the hard drive.
-%   ADDITIONAL DECISIONS HAVE TO BE MADE ABOUT CONTRAST LEVELS AND INITIAL
-%   INSTRUCTIONS! For now, image path defined at the top of the function
-%   under subtitle 'SETTINGS'.for setting parameters.
-%
-%   The function then returns all of these parameters, storing them in
-%   variables, which can then be passed into future calls of the same function.
-%   In these subsequent calls, change the values of those parameters that you
-%   wish to vary between blocks, but make sure that the function call has
-%   a complete set of arguments, otherwise the initial dialogue box will
-%   pop up again.
-%
-%   For example, consider these two function calls:
-%
-%   [subject, age, memory, popout, instruct, pTrials, xTrials, init_set_size, change_rate, num_types, expo_duration, blank_duration] = block();
-%   [subject, age, memory, popout, instruct, pTrials, xTrials, init_set_size, change_rate, num_types, expo_duration, blank_duration] = block(subject, age, 'i', 'y', instruct, pTrials, xTrials, init_set_size, change_rate, num_types, expo_duration, blank_duration);
-%
-%   Here, the first call will prompt a dialogue box. The user then inputs
-%   values for the parameters, and these are stored in the variables to the
-%   left of the assignment operator. The second call to the function then
-%   takes in certain parameters determined through the first call. Their
-%   order matters. Notice, however, that values for the "memory" and "popout"
-%   variables are changed ad hoc. The second block of trials will differ
-%   with respect to these changes.
-%
-%   Variables:
-%   1. subject - subject code, name, or whatever
-%   2. subject's age
-%   6. pTrials - number of practice trials
-%   7. xTrials - number of experimental trials
-%
+%   This function creates a block of trials for an anti-saccade task.
 %
 %   Matej Pavlic, 2018
 %
@@ -95,7 +60,7 @@ screen.centre = [xCenter; yCenter];
 subjectID = '';
 while length(subjectID) ~= 6 || sum(isletter(subjectID(1:4))) < 4 || isnan(str2double(subjectID(5:6)))
     
-    prompt = {'�IFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona)'};
+    prompt = {'ŠIFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona)'};
     defaults = {''};
     answer = inputdlg(prompt, 'Postavke', 1, defaults);
     
@@ -139,7 +104,7 @@ dataFileName = ([out_path, 'antisaccade_rezultati_',date_string, '_', subjectID,
 
 if exist(dataFileName, 'file') == 0
     dataFile = fopen(dataFileName, 'a');
-    fprintf(dataFile, 'Šifra ispitanika\t Situacija\t Trajanje fiksacije\t Tocno?\t Vrijeme reakcije');
+    fprintf(dataFile, 'Å ifra ispitanika\t Situacija\t Trajanje fiksacije\t Tocno?\t Vrijeme reakcije');
     fclose('all');
 end
 
@@ -236,7 +201,7 @@ lineWidthPix = 2;
 %
 %     PR_TRIALS = zeros(1, pTrials);  % set all to zero
 %
-%     % Odredi broj antisakada tijekom vježbe s obzirom na proporciju
+%     % Odredi broj antisakada tijekom vjeÅ¾be s obzirom na proporciju
 %     anti_num = floor(pTrials/divisor);
 %
 %
@@ -375,16 +340,16 @@ for trial = 1 : num_trials
     %% UPUTE
     if trial == 1
         
-        % POČETNE UPUTE I UPUTE ZA MAPIRANJE ODGOVORA
+        % POÄŒETNE UPUTE I UPUTE ZA MAPIRANJE ODGOVORA
         for uputa = 1 : 3
             
             switch(uputa)
                 case 1
-                    instruction = 'UPUTA ZA RAD\n\nVaša je zadaća identificirati slova\nkoja se vrlo kratko prikazuju na ekranu.\n\nU prvom dijelu ćete proći kroz niz pokušaja za vježbu u\nkojima će se ciljno slovo prikazivati na središtu ekrana.\n\nSvrha prve vježbe je da naučite koje tipke\nna tipkovnici odgovaraju kojim slovima.\n\nPritisnite ENTER za nastavak upute.';
+                    instruction = 'UPUTA ZA RAD\n\nVaÅ¡a je zadaÄ‡a identificirati slova\nkoja se vrlo kratko prikazuju na ekranu.\n\nU prvom dijelu Ä‡ete proÄ‡i kroz niz pokuÅ¡aja za vjeÅ¾bu u\nkojima Ä‡e se ciljno slovo prikazivati na srediÅ¡tu ekrana.\n\nSvrha prve vjeÅ¾be je da nauÄite koje tipke\nna tipkovnici odgovaraju kojim slovima.\n\nPritisnite ENTER za nastavak upute.';
                 case 2
-                    instruction = 'Tijekom zadatka koristit ćete tipke koje su na\ntipkovnici označene s bijelim naljepnicama\nna kojima pišu slova "B", "P" i "R".\n\nNa tipkovnici, smjestite svoj kažiprst na tipku\nna kojoj je napisano "B", srednji prst na tipku\nna kojoj je napisano "P", i prstenjak na tipku\nna kojoj je napisano "R".\n\nKada na ekranu vidite slovo "B", pritisnite "B".\nKada vidite slovo "P", pritisnite "P".\nKada vidite slovo "R", pritisnite "R".\n\nPritisnite ENTER za nastavak upute.';
+                    instruction = 'Tijekom zadatka koristit Ä‡ete tipke koje su na\ntipkovnici oznaÄene s bijelim naljepnicama\nna kojima piÅ¡u slova "B", "P" i "R".\n\nNa tipkovnici, smjestite svoj kaÅ¾iprst na tipku\nna kojoj je napisano "B", srednji prst na tipku\nna kojoj je napisano "P", i prstenjak na tipku\nna kojoj je napisano "R".\n\nKada na ekranu vidite slovo "B", pritisnite "B".\nKada vidite slovo "P", pritisnite "P".\nKada vidite slovo "R", pritisnite "R".\n\nPritisnite ENTER za nastavak upute.';
                 case 3
-                    instruction = 'Svaki pokušaj započinje prikazom fiksacijskog križića,\nnakon kojeg će kratko zatreperiti simbol "=".\nOdmah zatim će se vrlo kratko prikazati slovo koje trebate\nidentificirati, i njegovo mjesto će brzo preuzeti znamenka "8".\n\nStoga, obratite pozornost i fokusirajte svoj pogled na\nsredinu ekrana, inače biste mogli propustiti slovo.\n\nOdgovarajte što brže možete BEZ GREŠAKA.\nVažno je da budete brzi, ali VAŽNIJE je da ste točni.\n\nNakon što date svoj odgovor, na ekranu će se\nprikazati ZELENI kvadrat ukoliko ste odgovorili\nTOČNO, a CRVENI ukoliko ste odgovorili NETOČNO.\n\nPritisnite ENTER za početak vježbe.';
+                    instruction = 'Svaki pokuÅ¡aj zapoÄinje prikazom fiksacijskog kriÅ¾iÄ‡a,\nnakon kojeg Ä‡e kratko zatreperiti simbol "=".\nOdmah zatim Ä‡e se vrlo kratko prikazati slovo koje trebate\nidentificirati, i njegovo mjesto Ä‡e brzo preuzeti znamenka "8".\n\nStoga, obratite pozornost i fokusirajte svoj pogled na\nsredinu ekrana, inaÄe biste mogli propustiti slovo.\n\nOdgovarajte Å¡to brÅ¾e moÅ¾ete BEZ GREÅ AKA.\nVaÅ¾no je da budete brzi, ali VAÅ½NIJE je da ste toÄni.\n\nNakon Å¡to date svoj odgovor, na ekranu Ä‡e se\nprikazati ZELENI kvadrat ukoliko ste odgovorili\nTOÄŒNO, a CRVENI ukoliko ste odgovorili NETOÄŒNO.\n\nPritisnite ENTER za poÄetak vjeÅ¾be.';
             end
             
             DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
@@ -409,27 +374,27 @@ for trial = 1 : num_trials
         
     elseif trial == size(my_mapping_trials, 1) + 1
         
-        % PRIKAZ UPUTE ZA VJEŽBU IDENTIFIKACIJE SA SAKADAMA
+        % PRIKAZ UPUTE ZA VJEÅ½BU IDENTIFIKACIJE SA SAKADAMA
         for uputa = 1 : 4
             
             switch(uputa)
                 case 1
-                    instruction = 'Prvi dio vježbe je gotov.\n\nPritisnite ENTER za nastavak upute.';
+                    instruction = 'Prvi dio vjeÅ¾be je gotov.\n\nPritisnite ENTER za nastavak upute.';
                     DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
                     Screen('Flip', window, feedback_onset + 0.8);
                     WaitSecs(1);
                 case 2
-                    instruction = 'U sljedećem dijelu zadatka, slova se\nNEĆE prikazivati u središtu ekrana!\n\n\nUmjesto toga, prikazat će se ili\nna LIJEVOJ ili na DESNOJ strani ekrana!\n\n\n\n\nPritisnite ENTER za nastavak upute.';
+                    instruction = 'U sljedeÄ‡em dijelu zadatka, slova se\nNEÄ†E prikazivati u srediÅ¡tu ekrana!\n\n\nUmjesto toga, prikazat Ä‡e se ili\nna LIJEVOJ ili na DESNOJ strani ekrana!\n\n\n\n\nPritisnite ENTER za nastavak upute.';
                     DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
                     Screen('Flip', window);
                     WaitSecs(1);
                 case 3
-                    instruction = 'Simbol "=" zatreperi prije pojave slova\nkako bi Vam se pomoglo što brže ga locirati.\n\n\nU sljedećem nizu pokušaja za vježbu, BOJA fiksacijskog\nkrižića određuje na kojoj strani ekrana se, u odnosu na\ntrepereći simbol "=", pojavljuje ciljno slovo.\n\n\nUkoliko je križić BIJELI, slovo će se prikazati\nna ISTOJ strani kao i trepereći simbol.\n\nUkoliko je križić CRVENI, slovo će se prikazati\nna strani SUPROTNOJ od treperećeg simbola.\n\n\n\nPritisnite ENTER za nastavak upute.';
+                    instruction = 'Simbol "=" zatreperi prije pojave slova\nkako bi Vam se pomoglo Å¡to brÅ¾e ga locirati.\n\n\nU sljedeÄ‡em nizu pokuÅ¡aja za vjeÅ¾bu, BOJA fiksacijskog\nkriÅ¾iÄ‡a odreÄ‘uje na kojoj strani ekrana se, u odnosu na\ntrepereÄ‡i simbol "=", pojavljuje ciljno slovo.\n\n\nUkoliko je kriÅ¾iÄ‡ BIJELI, slovo Ä‡e se prikazati\nna ISTOJ strani kao i trepereÄ‡i simbol.\n\nUkoliko je kriÅ¾iÄ‡ CRVENI, slovo Ä‡e se prikazati\nna strani SUPROTNOJ od trepereÄ‡eg simbola.\n\n\n\nPritisnite ENTER za nastavak upute.';
                     DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
                     Screen('Flip', window);
                     WaitSecs(1);
                 case 4
-                    instruction = 'Na početku svakog pokušaja, fokusirajte svoj\npogled na fiksacijski križić jer će Vas to pripremiti\nna trepereći simbol koji dolazi ubrzo nakon njega.\n\nOdgovarajte što brže možete BEZ GREŠAKA.\nVažno je da budete brzi, ali VAŽNIJE je da ste točni.\n\nNakon što date svoj odgovor, na ekranu će se\nprikazati ZELENI kvadrat ukoliko ste odgovorili\nTOČNO, a CRVENI ukoliko ste odgovorili NETOČNO.\n\nPritisnite ENTER za početak vježbe.';
+                    instruction = 'Na poÄetku svakog pokuÅ¡aja, fokusirajte svoj\npogled na fiksacijski kriÅ¾iÄ‡ jer Ä‡e Vas to pripremiti\nna trepereÄ‡i simbol koji dolazi ubrzo nakon njega.\n\nOdgovarajte Å¡to brÅ¾e moÅ¾ete BEZ GREÅ AKA.\nVaÅ¾no je da budete brzi, ali VAÅ½NIJE je da ste toÄni.\n\nNakon Å¡to date svoj odgovor, na ekranu Ä‡e se\nprikazati ZELENI kvadrat ukoliko ste odgovorili\nTOÄŒNO, a CRVENI ukoliko ste odgovorili NETOÄŒNO.\n\nPritisnite ENTER za poÄetak vjeÅ¾be.';
                     DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
                     Screen('Flip', window);
                     WaitSecs(1);
@@ -459,12 +424,12 @@ for trial = 1 : num_trials
             
             switch(uputa)
                 case 1
-                    instruction = 'Vježba je završena! Sada slijedi mjerenje!\n\nZadatak će biti istog oblika kao ovaj kroz kojeg ste\nupravo prošli. Međutim, u ovom dijelu NEĆETE dobivati\npovratnu informaciju o točnosti Vašeg odgovora!\n\n\nPritisnite ENTER za nastavak upute.';
+                    instruction = 'VjeÅ¾ba je zavrÅ¡ena! Sada slijedi mjerenje!\n\nZadatak Ä‡e biti istog oblika kao ovaj kroz kojeg ste\nupravo proÅ¡li. MeÄ‘utim, u ovom dijelu NEÄ†ETE dobivati\npovratnu informaciju o toÄnosti VaÅ¡eg odgovora!\n\n\nPritisnite ENTER za nastavak upute.';
                     DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
                     Screen('Flip', window, feedback_onset + 0.8);
                     WaitSecs(1);
                 case 2
-                    instruction = 'Na početku svakog pokušaja, fokusirajte svoj\npogled na fiksacijski križić jer će Vas to pripremiti\nna trepereći simbol koji dolazi ubrzo nakon njega.\n\nOdgovarajte što brže možete BEZ GREŠAKA.\nVažno je da budete brzi, ali VAŽNIJE je da ste točni.\n\n\n\nKada ste spremni, smjestite prste na tipke za odgovore,\ni pritisnite ENTER kako biste započeli mjerenje!';
+                    instruction = 'Na poÄetku svakog pokuÅ¡aja, fokusirajte svoj\npogled na fiksacijski kriÅ¾iÄ‡ jer Ä‡e Vas to pripremiti\nna trepereÄ‡i simbol koji dolazi ubrzo nakon njega.\n\nOdgovarajte Å¡to brÅ¾e moÅ¾ete BEZ GREÅ AKA.\nVaÅ¾no je da budete brzi, ali VAÅ½NIJE je da ste toÄni.\n\n\n\nKada ste spremni, smjestite prste na tipke za odgovore,\ni pritisnite ENTER kako biste zapoÄeli mjerenje!';
                     DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
                     Screen('Flip', window);
                     WaitSecs(1);
@@ -490,7 +455,7 @@ for trial = 1 : num_trials
     elseif trial == (size(my_non_experimental_trials, 1) + (size(my_experimental_trials, 1)/2)) + 1
         
         % PAUZA
-        instruction = 'Uzmite kratki predah.\n\n\nNa početku svakog pokušaja, fokusirajte svoj\npogled na fiksacijski križić jer će Vas to pripremiti\nna trepereći simbol koji dolazi ubrzo nakon njega.\n\nOdgovarajte što brže možete BEZ GREŠAKA.\nVažno je da budete brzi, ali VAŽNIJE je da ste točni.\n\n\n\nKada ste spremni nastaviti, smjestite prste na tipke za\nodgovore, i pritisnite ENTER kako biste pokrenuli zadatak!';
+        instruction = 'Uzmite kratki predah.\n\n\nNa poÄetku svakog pokuÅ¡aja, fokusirajte svoj\npogled na fiksacijski kriÅ¾iÄ‡ jer Ä‡e Vas to pripremiti\nna trepereÄ‡i simbol koji dolazi ubrzo nakon njega.\n\nOdgovarajte Å¡to brÅ¾e moÅ¾ete BEZ GREÅ AKA.\nVaÅ¾no je da budete brzi, ali VAÅ½NIJE je da ste toÄni.\n\n\n\nKada ste spremni nastaviti, smjestite prste na tipke za\nodgovore, i pritisnite ENTER kako biste pokrenuli zadatak!';
         DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
         Screen('Flip', window, black_before_rest + 0.8);
         WaitSecs(1);
