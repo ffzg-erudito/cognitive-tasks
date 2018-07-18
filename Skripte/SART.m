@@ -1,41 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   This function creates a block of trials for an anti-saccade task. A single
-%   trial consists of a display of an Ebbinghaus stimulus, alongside a
-%   probe cirlce whose size is varied with the aim to match its size with
-%   the size of the central circle in the Ebbinghaus stimulus.
-%
-%   Images for the items to be displayed should be stored on the hard drive.
-%   ADDITIONAL DECISIONS HAVE TO BE MADE ABOUT CONTRAST LEVELS AND INITIAL
-%   INSTRUCTIONS! For now, image path defined at the top of the function
-%   under subtitle 'SETTINGS'.for setting parameters.
-%
-%   The function then returns all of these parameters, storing them in
-%   variables, which can then be passed into future calls of the same function.
-%   In these subsequent calls, change the values of those parameters that you
-%   wish to vary between blocks, but make sure that the function call has
-%   a complete set of arguments, otherwise the initial dialogue box will
-%   pop up again.
-%
-%   For example, consider these two function calls:
-%
-%   [subject, age, memory, popout, instruct, pTrials, xTrials, init_set_size, change_rate, num_types, expo_duration, blank_duration] = block();
-%   [subject, age, memory, popout, instruct, pTrials, xTrials, init_set_size, change_rate, num_types, expo_duration, blank_duration] = block(subject, age, 'i', 'y', instruct, pTrials, xTrials, init_set_size, change_rate, num_types, expo_duration, blank_duration);
-%
-%   Here, the first call will prompt a dialogue box. The user then inputs
-%   values for the parameters, and these are stored in the variables to the
-%   left of the assignment operator. The second call to the function then
-%   takes in certain parameters determined through the first call. Their
-%   order matters. Notice, however, that values for the "memory" and "popout"
-%   variables are changed ad hoc. The second block of trials will differ
-%   with respect to these changes.
-%
-%   Variables:
-%   1. subject - subject code, name, or whatever
-%   2. subject's age
-%   6. pTrials - number of practice trials
-%   7. xTrials - number of experimental trials
-%
+%   This function creates a block of trials for the SART (sustained attention to response task)
 %
 %   Matej Pavlic, 2018
 %
@@ -73,7 +38,7 @@ screen.center = [xCenter; yCenter];
 subjectID = '';
 while length(subjectID) ~= 6 || sum(isletter(subjectID(1:4))) < 4 || isnan(str2double(subjectID(5:6)))
     
-    prompt = {'�IFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona)'};
+    prompt = {'ŠIFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona)'};
     defaults = {''};
     answer = inputdlg(prompt, 'Postavke', 1, defaults);
     
@@ -105,7 +70,7 @@ dataFileName = ([out_path, 'SART_rezultati_',date_string, '_', subjectID, '.xls'
 
 if exist(dataFileName, 'file') == 0
     dataFile = fopen(dataFileName, 'a');
-    fprintf(dataFile, 'Šifra ispitanika\t Situacija\t RT\t Tocno?');
+    fprintf(dataFile, 'Å ifra ispitanika\t Situacija\t RT\t Tocno?');
     fclose('all');
 end
 
@@ -180,7 +145,7 @@ for block = 1 : (num_pBlocks + num_xBlocks)
     this_block_stimulus_sizes = [datasample(stimulus_sizes, 5, 'Replace', false) datasample(stimulus_sizes, 4, 'Replace', false)];
     
     
-    %% PRIKAZ UPUTE PRIJE BLOKA ZA VJEŽBU
+    %% PRIKAZ UPUTE PRIJE BLOKA ZA VJEÅ½BU
      if block == 1
         
         % PRVA UPUTA
@@ -188,9 +153,9 @@ for block = 1 : (num_pBlocks + num_xBlocks)
             
             switch(uputa)
                 case 1
-                    instruction = 'UPUTA ZA RAD\n\nU ovom zadatku će Vam se u središtu ekrana prikazivati\nznamenke jedna po jedna. Vaša je zadaća pritisnuti RAZMAKNICU (space)\nsvaki put kad vidite znamenku koja NIJE broj 3 (tri).\n\nKada vidite broj 3, trebate OBUSTAVITI pritisak razmaknice.\n\n\nPrimjerice, ako vidite broj 7, trebate pritisnuti razmaknicu,\na ako vidite broj 3, samo trebate pričekati prikaz sljedeće znamenke.\n\n\n\nPritisnite ENTER za nastavak upute.';
+                    instruction = 'UPUTA ZA RAD\n\nU ovom zadatku Ä‡e Vam se u srediÅ¡tu ekrana prikazivati\nznamenke jedna po jedna. VaÅ¡a je zadaÄ‡a pritisnuti RAZMAKNICU (space)\nsvaki put kad vidite znamenku koja NIJE broj 3 (tri).\n\nKada vidite broj 3, trebate OBUSTAVITI pritisak razmaknice.\n\n\nPrimjerice, ako vidite broj 7, trebate pritisnuti razmaknicu,\na ako vidite broj 3, samo trebate priÄekati prikaz sljedeÄ‡e znamenke.\n\n\n\nPritisnite ENTER za nastavak upute.';
                 case 2
-                    instruction = 'Kada vidite znamenku na koju trebate dati odgovor, pokušajte\npritisnuti razmaknicu što brže možete.\n\nZnamenke će se prikazivati brzo, a između svake će se\nprikazati simbol "⭙". Razmaknicu možete prisitnuti\ni tijekom prikaza tog simbola!\n\n\n\nNajprije ćete proći kroz kratki niz pokušaja za vježbu.\nPritisnite razmaknicu svaki put kada vidite broj koji NIJE broj 3!\n\n\n\nPritisnite ENTER za početak vježbe';      
+                    instruction = 'Kada vidite znamenku na koju trebate dati odgovor, pokuÅ¡ajte\npritisnuti razmaknicu Å¡to brÅ¾e moÅ¾ete.\n\nZnamenke Ä‡e se prikazivati brzo, a izmeÄ‘u svake Ä‡e se\nprikazati simbol "â­™". Razmaknicu moÅ¾ete prisitnuti\ni tijekom prikaza tog simbola!\n\n\n\nNajprije Ä‡ete proÄ‡i kroz kratki niz pokuÅ¡aja za vjeÅ¾bu.\nPritisnite razmaknicu svaki put kada vidite broj koji NIJE broj 3!\n\n\n\nPritisnite ENTER za poÄetak vjeÅ¾be';      
             end
             
             DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
