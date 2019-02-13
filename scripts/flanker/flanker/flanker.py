@@ -2,6 +2,7 @@
 The relations among inhibition and interference control functions: a
 latent-variable analysis. Journal of experimental psychology: General, 133(1),
 101."""
+from collections import Counter
 
 from expyriment import control, design, io, stimuli
 
@@ -43,26 +44,20 @@ def createBlocks(experiment, numPracticeBlocks, numTestBlocks, factors,
 
     for i in range(0, numTestBlocks + numPracticeBlocks):
         if i < numPracticeBlocks:
-            block = design.Block()
-            block.add_trials_full_factorial(factors, copies=8)
-            for trial in block.trials:
-                factorLevel = trial.get_factor('congruency')
-                stimulus = design.randomize.rand_element(
-                    factorLevels[factorLevel])
-                trial.add_stimulus(stimuli.TextLine(stimulus))
-                trial.preload_stimuli()
-            experiment.add_block(block)
+            trialsToAdd = 8
         else:
-            block = design.Block()
-            block.add_trials_full_factorial(factors,
-                                            copies=trialsPerCondInBlock)
-            for trial in block.trials:
-                factorLevel = trial.get_factor('congruency')
-                stimulus = design.randomize.rand_element(
-                    factorLevels[factorLevel])
-                trial.add_stimulus(stimuli.TextLine(stimulus))
-                trial.preload_stimuli()
-            experiment.add_block(block)
+            trialsToAdd = trialsPerCondInBlock
+
+        block = design.Block()
+        block.add_trials_full_factorial(factors,
+                                        copies=trialsToAdd)
+        for trial in block.trials:
+            factorLevel = trial.get_factor('congruency')
+            stimulus = design.randomize.rand_element(
+                factorLevels[factorLevel])
+            trial.add_stimulus(stimuli.TextLine(stimulus))
+            trial.preload_stimuli()
+        experiment.add_block(block)
 
 
 def stimChecker(trials, factorLevels):
@@ -91,10 +86,33 @@ def stimChecker(trials, factorLevels):
             return False
 
 
+def conditionChecker(trials):
+    """Checks whether a condition repeats more than 3 times in a row."""
+    conditions = [trial.get_factor('congruency') for trial in trials]
+    repetitions = Counter()
+
+    for condition in conditions:
+        if condition not in repetitions and len(repetitions) == 0:
+            repetitions[condition] += 1
+        elif condition not in repetitions and len(repetitions) != 0:
+            repetitions = Counter()
+            repetitions[condition] += 1
+        elif condition in repetitions and len(repetitions) == 1 and\
+                repetitions[condition] <= 3:
+            repetitions[condition] += 1
+        elif condition in repetitions and len(repetitions) == 1 and\
+                repetitions[condition] > 3:
+            return False
+
+    return True
+
+
 def shuffleTrials(experiment, maxIter=1000):
     """Shuffle trials so that two identical stimuli aren't repeated, that
     each condition appears maximally 3 consecutive times and that two identical
     stimuli don't appear consecutively."""
+
+    # TODO: ubaciti conditionChecker
 
     results = []
 
@@ -115,11 +133,20 @@ def shuffleTrials(experiment, maxIter=1000):
                 elif nIter < maxIter:
                     nIter += 1
                 elif nIter == maxIter:
+                    print('maxiter reached')
                     results.append(False)
                     break
 
     return results
 
+
+# create practice and trial blocks for experiment
+shuffleFlag = [False]
+while not all(shuffleFlag):
+    experiment.clear_blocks()
+    createBlocks(experiment, numPracticeBlocks, numTestBlocks, factors,
+                 factorLevels)
+    shuffleTrials(experiment)
 
 # preparing global stimuli
 blank = stimuli.BlankScreen()
