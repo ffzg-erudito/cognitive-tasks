@@ -2,15 +2,16 @@
 The relations among inhibition and interference control functions: a
 latent-variable analysis. Journal of experimental psychology: General, 133(1),
 101."""
-from collections import Counter
-
 from expyriment import control, design, io, stimuli
+
+from flanker.helpers import stimChecker, conditionChecker
 
 # DEV MODE
 control.set_develop_mode(True)
 
 # experiment variables
-trialsPerCondInBlock = 10
+trialsPerCondInTest = 10
+trialPerCondInPractice = 8
 numTestBlocks = 4
 numPracticeBlocks = 1
 
@@ -38,115 +39,36 @@ experiment.add_data_variable_names(['subject', 'condition', 'reactionTime',
                                     'stimulus', 'response'])
 
 
-def createBlocks(experiment, numPracticeBlocks, numTestBlocks, factors,
-                 factorLevels):
-    """Creates practice and test blocks."""
+for i in range(0, numTestBlocks + numPracticeBlocks):
+    if i < numPracticeBlocks:
+        trialsToAdd = trialPerCondInPractice
+    else:
+        trialsToAdd = trialsPerCondInTest
 
-    for i in range(0, numTestBlocks + numPracticeBlocks):
-        if i < numPracticeBlocks:
-            trialsToAdd = 8
-        else:
-            trialsToAdd = trialsPerCondInBlock
+    block = design.Block()
 
-        block = design.Block()
-        block.add_trials_full_factorial(factors,
-                                        copies=trialsToAdd)
+    stimCheckFlag = True
+    condCheckFlag = False
+
+    while stimCheckFlag or not condCheckFlag:
+        block.clear_trials()
+        block.add_trials_full_factorial(factors, copies=trialsToAdd)
+
         for trial in block.trials:
             factorLevel = trial.get_factor('congruency')
-            stimulus = design.randomize.rand_element(
-                factorLevels[factorLevel])
+            stimulus = design.randomize.rand_element(factorLevels[factorLevel])
             trial.add_stimulus(stimuli.TextLine(stimulus))
-            trial.preload_stimuli()
-        experiment.add_block(block)
 
+        for j in range(0, 500):
+            stimCheckFlag = stimChecker(block.trials, factorLevels)
+            condCheckFlag = conditionChecker(block.trials)
 
-def stimChecker(trials, factorLevels):
-    """Checks whether the distractor from trial N is the target in trial N+1.
-    Returns False if there is no such case, and True if there is."""
-
-    for i in range(0, len(trials) - 1):
-        stimCurrent = trials[i].stimuli[0]
-        stimNext = trials[i + 1].stimuli[0]
-
-        currentText = stimCurrent.text
-        nextText = stimNext.text
-
-        # if it's a control condition, skip, since there is no distractor
-        if currentText in factorLevels.get('control') and i < len(trials) - 2:
-            continue
-        elif nextText in factorLevels.get('control') and\
-                currentText[0] == nextText and i < len(trials) - 2:
-            return True
-        elif nextText not in factorLevels.get('control') and\
-                currentText[0] == nextText[3] and i < len(trials) - 2:
-            return True
-        elif i < len(trials) - 2:
-            continue
-        else:
-            return False
-
-
-def conditionChecker(trials):
-    """Checks whether a condition repeats more than 3 times in a row."""
-    conditions = [trial.get_factor('congruency') for trial in trials]
-    repetitions = Counter()
-
-    for condition in conditions:
-        if condition not in repetitions and len(repetitions) == 0:
-            repetitions[condition] += 1
-        elif condition not in repetitions and len(repetitions) != 0:
-            repetitions = Counter()
-            repetitions[condition] += 1
-        elif condition in repetitions and len(repetitions) == 1 and\
-                repetitions[condition] <= 3:
-            repetitions[condition] += 1
-        elif condition in repetitions and len(repetitions) == 1 and\
-                repetitions[condition] > 3:
-            return False
-
-    return True
-
-
-def shuffleTrials(experiment, maxIter=1000):
-    """Shuffle trials so that two identical stimuli aren't repeated, that
-    each condition appears maximally 3 consecutive times and that two identical
-    stimuli don't appear consecutively."""
-
-    # TODO: ubaciti conditionChecker
-
-    results = []
-
-    for block in experiment.blocks:
-        checkFlag = stimChecker(block.trials, factorLevels)
-        if checkFlag is False:
-            results.append(True)
-            continue
-        else:
-            nIter = 1
-
-            while checkFlag and nIter <= maxIter:
+            if stimCheckFlag or not condCheckFlag:
                 block.shuffle_trials(max_repetitions=1)
-                checkFlag = stimChecker(block.trials, factorLevels)
-                if checkFlag is False:
-                    results.append(True)
-                    break
-                elif nIter < maxIter:
-                    nIter += 1
-                elif nIter == maxIter:
-                    print('maxiter reached')
-                    results.append(False)
-                    break
+            else:
+                break
 
-    return results
-
-
-# create practice and trial blocks for experiment
-shuffleFlag = [False]
-while not all(shuffleFlag):
-    experiment.clear_blocks()
-    createBlocks(experiment, numPracticeBlocks, numTestBlocks, factors,
-                 factorLevels)
-    shuffleTrials(experiment)
+    experiment.add_block(block)
 
 # preparing global stimuli
 blank = stimuli.BlankScreen()
