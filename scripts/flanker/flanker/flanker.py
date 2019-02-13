@@ -77,46 +77,49 @@ def stimChecker(trials, factorLevels):
         nextText = stimNext.text
 
         # if it's a control condition, skip, since there is no distractor
-        if currentText in factorLevels.get('control'):
+        if currentText in factorLevels.get('control') and i < len(trials) - 2:
             continue
         elif nextText in factorLevels.get('control') and\
-                currentText[0] == nextText:
-                return True
+                currentText[0] == nextText and i < len(trials) - 2:
+            return True
         elif nextText not in factorLevels.get('control') and\
-                currentText[0] == nextText[3]:
-                return True
+                currentText[0] == nextText[3] and i < len(trials) - 2:
+            return True
+        elif i < len(trials) - 2:
+            continue
         else:
             return False
 
 
-def shuffleTrials(experiment, maxIter=500):
+def shuffleTrials(experiment, maxIter=1000):
     """Shuffle trials so that two identical stimuli aren't repeated, that
     each condition appears maximally 3 consecutive times and that two identical
     stimuli don't appear consecutively."""
 
+    results = []
+
     for block in experiment.blocks:
-        nIter = 1
-        while (stimChecker(block.trials, factorLevels) or
-               block.max_trial_repetitions != 0) and nIter <= maxIter:
-            nIter += 1
-            block.shuffle_trials(max_repetitions=1)
-        if nIter == maxIter:
-            return False
+        checkFlag = stimChecker(block.trials, factorLevels)
+        if checkFlag is False:
+            results.append(True)
+            continue
+        else:
+            nIter = 1
 
-    return True
+            while checkFlag and nIter <= maxIter:
+                block.shuffle_trials(max_repetitions=1)
+                checkFlag = stimChecker(block.trials, factorLevels)
+                if checkFlag is False:
+                    results.append(True)
+                    break
+                elif nIter < maxIter:
+                    nIter += 1
+                elif nIter == maxIter:
+                    results.append(False)
+                    break
 
+    return results
 
-experiment.clear_blocks()
-createBlocks(experiment, numPracticeBlocks, numTestBlocks, factors,
-             factorLevels)
-
-shuffleTrials(experiment)
-[block.max_trial_repetitions for block in experiment.blocks]
-
-for i, block in enumerate(experiment.blocks):
-    print(f'========== block {i} ==========')
-    for trial in block.trials:
-        print(trial.stimuli[0].text)
 
 # preparing global stimuli
 blank = stimuli.BlankScreen()
