@@ -10,6 +10,29 @@ from flanker.helpers import conditionChecker, stimChecker
 control.set_develop_mode(True)
 
 # experiment variables
+instructionsText1 = '''Sada ćete rješavati računalni zadatak pažnje.
+
+
+Na sredini zaslona će se pojavljivati slova. Nekad će Vam biti prikazano\
+ sedam slova, a nekad samo jedno.
+
+Ako Vam računalo prikaže sedam slova, Vaš će zadatak biti identificirati slovo\
+ u sredini. Ako se u sredini nalazi H ili K, pritisnite tipku M. Ako se u\
+ sredini nalazi slovo C ili S, pritisnite tipku Y.'''
+
+instructionsText2 = '''Ako Vam račualo prikaže samo jedno slovo, odgovorite\
+ koje je slovo prikazano koristeći gore navedene tipke (M ako je slovo H ili\
+ K i Y ako je slovo C ili S.)
+
+Sada ćete proći kroz nekoliko zadatka za vježbu.
+
+Pritisnite ENTER za nastavak.'''
+
+subCodeText = 'Molimo Vas, unesite svoju šifru - prva dva slova imena majke, \
+posljednja dva slova imena oca i posljednje dvije znamenke broja mobilnog \
+telefona. Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj" \
+tretirajte kao dva slova.'
+
 trialsPerCondInTest = 4
 trialPerCondInPractice = 2
 numTestBlocks = 2
@@ -86,24 +109,26 @@ fixCross = stimuli.FixCross()
 fixCross.preload()
 
 # preparing instructions and subject code entry screens
-instructions = ''
-
-subCodeText = 'Molimo Vas, unesite svoju šifru - prva dva slova imena majke, \
-posljednja dva slova imena oca i posljednje dvije znamenke broja mobilnog \
-telefona. Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj" \
-tretirajte kao dva slova.'
-
 subCodeInstr = stimuli.TextBox(text=subCodeText, size=(600, 200))
 subCodeInput = io.TextInput(length=6, background_stimulus=subCodeInstr,
                             position=(0, -100))
 
-# TODO: dodati uputu - pronaći uputu
+instructions1 = stimuli.TextScreen(heading='Uputa', text=instructionsText1)
+instructions2 = stimuli.TextScreen(heading='', text=instructionsText2)
+
+# TODO: staviti feedback za trial
 
 # start experiment
 control.start()
 # main loop
 subCode = subCodeInput.get()
-# TODO: uputa
+
+instructions1.present()
+experiment.keyboard.wait(misc.constants.K_RETURN)
+
+instructions2.present()
+experiment.keyboard.wait(misc.constants.K_RETURN)
+
 for block in experiment.blocks:
     for trial in block.trials:
         blank.present()
