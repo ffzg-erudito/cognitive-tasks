@@ -1,2 +1,3 @@
 scripts/flanker/events
 scripts/flanker/data
+scripts/flanker/**/*.pyc

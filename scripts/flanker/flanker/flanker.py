@@ -2,19 +2,21 @@
 # The relations among inhibition and interference control functions: a
 # latent-variable analysis. Journal of experimental psychology: General,
 # 133(1), 101.
+import re
+
 from expyriment import control, design, io, misc, stimuli
 
-from flanker.helpers import conditionChecker, stimChecker
+from helpers import conditionChecker, stimChecker
 
 # DEV MODE
-control.set_develop_mode(True)
+control.set_develop_mode(False)
 
 # localization
-control.defaults.goodbye_text = '''Zadatk je gotov. Molim Vas, pozovite\
+control.defaults.goodbye_text = '''Zadatak je gotov. Molim Vas, pozovite\
  eksperimentatora.'''
 
 # package variables
-control.defaults.goodbye_delay = 10000
+control.defaults.goodbye_delay = 5000
 control.defaults.fast_quit = False
 
 # experiment variables
@@ -48,10 +50,12 @@ Molimo Vas da zadatak pokušate rješavati što brže i što točnije možete.
 Ako imate pitanja, postavite ih sada. U protivnom, pritisnite ENTER za\
  nastavak.'''
 
-subCodeText = 'Molimo Vas, unesite svoju šifru - prva dva slova imena majke, \
-posljednja dva slova imena oca i posljednje dvije znamenke broja mobilnog \
-telefona. Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj" \
-tretirajte kao dva slova.'
+subCodeText = '''Molimo Vas, unesite svoju šifru - prva dva slova imena majke,\
+ posljednja dva slova imena oca i posljednje dvije znamenke broja mobilnog\
+ telefona.
+
+Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj"\
+ tretirajte kao dva slova.'''
 
 trialsPerCondInTest = 4
 trialPerCondInPractice = 2
@@ -73,8 +77,6 @@ keyDict = {'97': 'A', '108': 'L'}
 
 correctResponses = {'K': misc.constants.K_l, 'H': misc.constants.K_l,
                     'C': misc.constants.K_a, 'S': misc.constants.K_a}
-
-correctResponses['K']
 
 # experiment setup
 experiment = design.Experiment(name='Flanker', foreground_colour=(0, 0, 0),
@@ -134,7 +136,7 @@ fixCross = stimuli.FixCross()
 fixCross.preload()
 
 # preparing instructions and subject code entry screens
-subCodeInstr = stimuli.TextBox(text=subCodeText, size=(600, 200))
+subCodeInstr = stimuli.TextBox(text=subCodeText, size=(800, 400))
 subCodeInput = io.TextInput(length=6, background_stimulus=subCodeInstr,
                             position=(0, -100))
 
@@ -155,7 +157,7 @@ subCode = ''
 # start experiment
 control.start(skip_ready_screen=True)
 
-while len(subCode) != 6:
+while not re.fullmatch('[A-Z]{4}\d{2}', subCode, re.IGNORECASE):
     subCode = subCodeInput.get()
 
 instructions1.present()
@@ -188,7 +190,7 @@ for blockNo, block in enumerate(experiment.blocks):
                 experiment.clock.wait(1000)
                 isCorrect = 0
 
-            experiment.data.add([experiment.subject, subCode,
+            experiment.data.add([experiment.subject, subCode.upper(),
                                  trial.get_factor('congruency'), rt,
                                  trial.stimuli[0].text, keyDict[str(key)],
                                  isCorrect, block.name])
@@ -216,7 +218,7 @@ for blockNo, block in enumerate(experiment.blocks):
             else:
                 isCorrect = 0
 
-            experiment.data.add([experiment.subject, subCode,
+            experiment.data.add([experiment.subject, subCode.upper(),
                                  trial.get_factor('congruency'), rt,
                                  trial.stimuli[0].text, keyDict[str(key)],
                                  isCorrect, block.name])
