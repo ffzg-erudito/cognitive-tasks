@@ -1,7 +1,7 @@
-"""A flanker task implementation based on Friedman, N. P., & Miyake, A. (2004).
-The relations among inhibition and interference control functions: a
-latent-variable analysis. Journal of experimental psychology: General, 133(1),
-101."""
+# A flanker task implementation based on Friedman, N. P., & Miyake, A. (2004).
+# The relations among inhibition and interference control functions: a
+# latent-variable analysis. Journal of experimental psychology: General,
+# 133(1), 101.
 from expyriment import control, design, io, misc, stimuli
 
 from flanker.helpers import conditionChecker, stimChecker
@@ -9,24 +9,44 @@ from flanker.helpers import conditionChecker, stimChecker
 # DEV MODE
 control.set_develop_mode(True)
 
+# localization
+control.defaults.goodbye_text = '''Zadatk je gotov. Molim Vas, pozovite\
+ eksperimentatora.'''
+
+# package variables
+control.defaults.goodbye_delay = 10000
+control.defaults.fast_quit = False
+
 # experiment variables
 instructionsText1 = '''Sada ćete rješavati računalni zadatak pažnje.
-
-
 Na sredini zaslona će se pojavljivati slova. Nekad će Vam biti prikazano\
  sedam slova, a nekad samo jedno.
 
 Ako Vam računalo prikaže sedam slova, Vaš će zadatak biti identificirati slovo\
- u sredini. Ako se u sredini nalazi H ili K, pritisnite tipku M. Ako se u\
- sredini nalazi slovo C ili S, pritisnite tipku Y.'''
+ u sredini. Ako se u sredini nalazi H ili K, pritisnite tipku L. Ako se u\
+ sredini nalazi slovo C ili S, pritisnite tipku A.
+Pritom trebate zanemarivati slova koja se nalaze oko slova u sredini.
+
+Pritisnite ENTER za nastavak upute.'''
 
 instructionsText2 = '''Ako Vam račualo prikaže samo jedno slovo, odgovorite\
- koje je slovo prikazano koristeći gore navedene tipke (M ako je slovo H ili\
- K i Y ako je slovo C ili S.)
+ koje je slovo prikazano koristeći ranije navedene tipke (L ako je slovo H ili\
+ K,  A ako je slovo C ili S.)
 
-Sada ćete proći kroz nekoliko zadatka za vježbu.
+Sada ćete proći kroz nekoliko zadatka za vježbu, u kojima ćete dobivati\
+ povratnu informaciju o svom uratku.
 
-Pritisnite ENTER za nastavak.'''
+Pritisnite ENTER za prelazak na zadatke za vježbu.'''
+
+instructionsText3 = '''Ovo je kraj dijela za vježbu. Slijedi glavni dio\
+ zadatka.
+
+Više nećete dobivati povratnu informaciju o svom uratku.
+
+Molimo Vas da zadatak pokušate rješavati što brže i što točnije možete.
+
+Ako imate pitanja, postavite ih sada. U protivnom, pritisnite ENTER za\
+ nastavak.'''
 
 subCodeText = 'Molimo Vas, unesite svoju šifru - prva dva slova imena majke, \
 posljednja dva slova imena oca i posljednje dvije znamenke broja mobilnog \
@@ -49,7 +69,12 @@ factorLevels = {'congruent': ['HHHKHHH', 'KKKHKKK', 'CCCSCCC', 'SSSCSSS'],
                 'same': ['HHHHHHH', 'KKKKKKK', 'SSSSSSS', 'CCCCCCC'],
                 'control': ['H', 'C', 'S', 'K']}
 
-keyDict = {'121': 'K', '109': 'M'}
+keyDict = {'97': 'A', '108': 'L'}
+
+correctResponses = {'K': misc.constants.K_l, 'H': misc.constants.K_l,
+                    'C': misc.constants.K_a, 'S': misc.constants.K_a}
+
+correctResponses['K']
 
 # experiment setup
 experiment = design.Experiment(name='Flanker', foreground_colour=(0, 0, 0),
@@ -62,7 +87,7 @@ control.initialize(experiment)
 # set variable names
 experiment.add_data_variable_names(['subjectNo', 'subjectCode', 'condition',
                                     'reactionTime', 'stimulus', 'response',
-                                    'blockName'])
+                                    'isCorrect', 'blockName'])
 
 
 for i in range(0, numTestBlocks + numPracticeBlocks):
@@ -115,13 +140,23 @@ subCodeInput = io.TextInput(length=6, background_stimulus=subCodeInstr,
 
 instructions1 = stimuli.TextScreen(heading='Uputa', text=instructionsText1)
 instructions2 = stimuli.TextScreen(heading='', text=instructionsText2)
+instructions3 = stimuli.TextScreen(heading='', text=instructionsText3)
 
-# TODO: staviti feedback za trial
+feedBackCorrect = stimuli.TextLine(text='Točno!',
+                                   text_colour=misc.constants.C_GREEN)
+feedBackCorrect.preload()
+
+feedBackIncorrect = stimuli.TextLine(text='Pogrešno!',
+                                     text_colour=misc.constants.C_RED)
+feedBackIncorrect.preload()
+
+subCode = ''
 
 # start experiment
-control.start()
-# main loop
-subCode = subCodeInput.get()
+control.start(skip_ready_screen=True)
+
+while len(subCode) != 6:
+    subCode = subCodeInput.get()
 
 instructions1.present()
 experiment.keyboard.wait(misc.constants.K_RETURN)
@@ -129,17 +164,60 @@ experiment.keyboard.wait(misc.constants.K_RETURN)
 instructions2.present()
 experiment.keyboard.wait(misc.constants.K_RETURN)
 
-for block in experiment.blocks:
-    for trial in block.trials:
-        blank.present()
-        experiment.clock.wait(blankDuration)
-        fixCross.present()
-        experiment.clock.wait(fixCrossDuration)
-        trial.stimuli[0].present()
-        key, rt = experiment.keyboard.wait([misc.constants.K_y,
-                                            misc.constants.K_m])
-        experiment.data.add([experiment.subject, subCode,
-                             trial.get_factor('congruency'), rt,
-                             trial.stimuli[0].text, keyDict[str(key)],
-                             block.name])
+for blockNo, block in enumerate(experiment.blocks):
+    if block.name == 'practice':
+        for trial in block.trials:
+            if trial.get_factor('congruency') == 'control':
+                target = trial.stimuli[0].text
+            else:
+                target = trial.stimuli[0].text[3]
+
+            blank.present()
+            experiment.clock.wait(blankDuration)
+            fixCross.present()
+            experiment.clock.wait(fixCrossDuration)
+            trial.stimuli[0].present()
+            key, rt = experiment.keyboard.wait([misc.constants.K_a,
+                                                misc.constants.K_l])
+            if key == correctResponses[target]:
+                feedBackCorrect.present()
+                experiment.clock.wait(1000)
+                isCorrect = 1
+            else:
+                feedBackIncorrect.present()
+                experiment.clock.wait(1000)
+                isCorrect = 0
+
+            experiment.data.add([experiment.subject, subCode,
+                                 trial.get_factor('congruency'), rt,
+                                 trial.stimuli[0].text, keyDict[str(key)],
+                                 isCorrect, block.name])
+
+        if experiment.blocks[blockNo + 1].name == 'test':
+            instructions3.present()
+            experiment.keyboard.wait(misc.constants.K_RETURN)
+
+    else:
+        for trial in block.trials:
+            if trial.get_factor('congruency') == 'control':
+                target = trial.stimuli[0].text
+            else:
+                target = trial.stimuli[0].text[3]
+
+            blank.present()
+            experiment.clock.wait(blankDuration)
+            fixCross.present()
+            experiment.clock.wait(fixCrossDuration)
+            trial.stimuli[0].present()
+            key, rt = experiment.keyboard.wait([misc.constants.K_a,
+                                                misc.constants.K_l])
+            if key == correctResponses[target]:
+                isCorrect = 1
+            else:
+                isCorrect = 0
+
+            experiment.data.add([experiment.subject, subCode,
+                                 trial.get_factor('congruency'), rt,
+                                 trial.stimuli[0].text, keyDict[str(key)],
+                                 isCorrect, block.name])
 control.end()
