@@ -2,9 +2,9 @@
 The relations among inhibition and interference control functions: a
 latent-variable analysis. Journal of experimental psychology: General, 133(1),
 101."""
-from expyriment import control, design, stimuli, misc
+from expyriment import control, design, io, misc, stimuli
 
-from flanker.helpers import stimChecker, conditionChecker
+from flanker.helpers import conditionChecker, stimChecker
 
 # DEV MODE
 control.set_develop_mode(True)
@@ -37,8 +37,9 @@ experiment = design.Experiment(name='Flanker', foreground_colour=(0, 0, 0),
 control.initialize(experiment)
 
 # set variable names
-experiment.add_data_variable_names(['subject', 'condition', 'reactionTime',
-                                    'stimulus', 'response', 'blockName'])
+experiment.add_data_variable_names(['subjectNo', 'subjectCode', 'condition',
+                                    'reactionTime', 'stimulus', 'response',
+                                    'blockName'])
 
 
 for i in range(0, numTestBlocks + numPracticeBlocks):
@@ -84,11 +85,25 @@ blank.preload()
 fixCross = stimuli.FixCross()
 fixCross.preload()
 
-# TODO: dodati uputu, složiti unos šifre
+# preparing instructions and subject code entry screens
+instructions = ''
+
+subCodeText = 'Molimo Vas, unesite svoju šifru - prva dva slova imena majke, \
+posljednja dva slova imena oca i posljednje dvije znamenke broja mobilnog \
+telefona. Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj" \
+tretirajte kao dva slova.'
+
+subCodeInstr = stimuli.TextBox(text=subCodeText, size=(600, 200))
+subCodeInput = io.TextInput(length=6, background_stimulus=subCodeInstr,
+                            position=(0, -100))
+
+# TODO: dodati uputu - pronaći uputu
 
 # start experiment
 control.start()
 # main loop
+subCode = subCodeInput.get()
+# TODO: uputa
 for block in experiment.blocks:
     for trial in block.trials:
         blank.present()
@@ -98,7 +113,7 @@ for block in experiment.blocks:
         trial.stimuli[0].present()
         key, rt = experiment.keyboard.wait([misc.constants.K_y,
                                             misc.constants.K_m])
-        experiment.data.add([experiment.subject,
+        experiment.data.add([experiment.subject, subCode,
                              trial.get_factor('congruency'), rt,
                              trial.stimuli[0].text, keyDict[str(key)],
                              block.name])
