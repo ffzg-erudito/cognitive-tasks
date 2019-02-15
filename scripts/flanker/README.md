@@ -8,6 +8,6 @@ latent-variable analysis. *Journal of experimental psychology: General,
 
 ## TODO:
 
-- [] test on Windows
-- [] compile to `exe`
-- [] set correct nubmer of blocks and trials
+- [ ] test on Windows
+- [ ] compile to `exe`
+- [ ] set correct nubmer of blocks and trials
