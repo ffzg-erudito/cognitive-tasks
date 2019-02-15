@@ -1,6 +1,7 @@
 from collections import Counter
 
-def stimChecker(trials, factorLevels):
+
+def stimChecker(trials, factorStimuli):
     """Checks whether the distractor from trial N is the target in trial N+1.
     Returns False if there is no such case, and True if there is."""
 
@@ -12,12 +13,12 @@ def stimChecker(trials, factorLevels):
         nextText = stimNext.text
 
         # if it's a control condition, skip, since there is no distractor
-        if currentText in factorLevels.get('control') and i < len(trials) - 2:
+        if currentText in factorStimuli.get('control') and i < len(trials) - 2:
             continue
-        elif nextText in factorLevels.get('control') and\
+        elif nextText in factorStimuli.get('control') and\
                 currentText[0] == nextText and i < len(trials) - 2:
             return True
-        elif nextText not in factorLevels.get('control') and\
+        elif nextText not in factorStimuli.get('control') and\
                 currentText[0] == nextText[3] and i < len(trials) - 2:
             return True
         elif i < len(trials) - 2:
@@ -45,4 +46,3 @@ def conditionChecker(trials):
             return False
 
     return True
-

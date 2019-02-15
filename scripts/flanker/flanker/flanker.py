@@ -19,7 +19,7 @@ control.defaults.goodbye_text = '''Zadatak je gotov. Molim Vas, pozovite\
 control.defaults.goodbye_delay = 5000
 control.defaults.fast_quit = False
 
-# experiment variables
+# instructions
 instructionsText1 = '''Sada ćete rješavati računalni zadatak pažnje.
 Na sredini zaslona će se pojavljivati slova. Nekad će Vam biti prikazano\
  sedam slova, a nekad samo jedno.
@@ -57,6 +57,7 @@ subCodeText = '''Molimo Vas, unesite svoju šifru - prva dva slova imena majke,\
 Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj"\
  tretirajte kao dva slova.'''
 
+# experiment variables
 trialsPerCondInTest = 4
 trialPerCondInPractice = 2
 numTestBlocks = 2
@@ -67,11 +68,11 @@ blankDuration = 1000
 
 factors = {'congruency': ['congruent', 'incongruent', 'same', 'control']}
 
-factorLevels = {'congruent': ['HHHKHHH', 'KKKHKKK', 'CCCSCCC', 'SSSCSSS'],
-                'incongruent': ['CCCKCCC', 'CCCHCCC', 'HHHSHHH', 'HHHCHHH',
-                                'SSSKSSS', 'SSSHSSS', 'KKKSKKK', 'KKKCKKK'],
-                'same': ['HHHHHHH', 'KKKKKKK', 'SSSSSSS', 'CCCCCCC'],
-                'control': ['H', 'C', 'S', 'K']}
+factorStimuli = {'congruent': ['HHHKHHH', 'KKKHKKK', 'CCCSCCC', 'SSSCSSS'],
+                 'incongruent': ['CCCKCCC', 'CCCHCCC', 'HHHSHHH', 'HHHCHHH',
+                                 'SSSKSSS', 'SSSHSSS', 'KKKSKKK', 'KKKCKKK'],
+                 'same': ['HHHHHHH', 'KKKKKKK', 'SSSSSSS', 'CCCCCCC'],
+                 'control': ['H', 'C', 'S', 'K']}
 
 keyDict = {'97': 'A', '108': 'L'}
 
@@ -90,7 +91,6 @@ control.initialize(experiment)
 experiment.add_data_variable_names(['subjectNo', 'subjectCode', 'condition',
                                     'reactionTime', 'stimulus', 'response',
                                     'isCorrect', 'blockName'])
-
 
 for i in range(0, numTestBlocks + numPracticeBlocks):
     if i < numPracticeBlocks:
@@ -111,11 +111,12 @@ for i in range(0, numTestBlocks + numPracticeBlocks):
 
         for trial in block.trials:
             factorLevel = trial.get_factor('congruency')
-            stimulus = design.randomize.rand_element(factorLevels[factorLevel])
+            stimulus = design.randomize.rand_element(
+                factorStimuli[factorLevel])
             trial.add_stimulus(stimuli.TextLine(stimulus))
 
         for j in range(0, 500):
-            stimCheckFlag = stimChecker(block.trials, factorLevels)
+            stimCheckFlag = stimChecker(block.trials, factorStimuli)
             condCheckFlag = conditionChecker(block.trials)
 
             if stimCheckFlag or not condCheckFlag:
@@ -157,7 +158,7 @@ subCode = ''
 # start experiment
 control.start(skip_ready_screen=True)
 
-while not re.fullmatch('[A-Z]{4}\d{2}', subCode, re.IGNORECASE):
+while not re.fullmatch(r'[A-Z]{4}\d{2}', subCode, re.IGNORECASE):
     subCode = subCodeInput.get()
 
 instructions1.present()
