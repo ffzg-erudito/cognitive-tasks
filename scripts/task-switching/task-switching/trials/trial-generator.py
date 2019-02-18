@@ -1,7 +1,11 @@
 # this script is used to create the experimental trials and save them to a file
 # which is loaded at startup
+import re
+
 from collections import Counter
 from os.path import join
+
+import pandas as pd
 
 from expyriment import design, misc
 
@@ -94,3 +98,42 @@ for segment in expSchema[numPureBlocks:]:
     experiment.add_block(block)
 
 experiment.save_design(join('task-switching', 'trials', 'design.csv'))
+
+# generating csv with stimuli
+expDesign = pd.read_csv(join('task-switching', 'trials', 'design.csv'))
+
+# adding feedback info
+feedback = []
+for segment in expSchema:
+    if re.search('NoFeed$|^test', segment):
+        feedMsg = 'no'
+    else:
+        feedMsg = 'yes'
+
+    for _ in range(0, numTrials[segment]):
+        feedback.append(feedMsg)
+
+expDesign['feedback'] = pd.Series(feedback)
+
+# adding blockname
+blockInfo = {'blockName': [],
+             'blockType': [],
+             'blockCondition': []}
+for segment in expSchema:
+    for _ in range(0, numTrials[segment]):
+        blockName = segment
+        blockType = re.search('test|practice', segment).group(0)
+        blockCondition = re.search('Mixed|Pure', segment).group(0).lower()
+
+        blockInfo['blockName'].append(blockName)
+        blockInfo['blockType'].append(blockType)
+        blockInfo['blockCondition'].append(blockCondition)
+
+expDesign = pd.concat([expDesign, pd.DataFrame(blockInfo)], axis=1)
+
+expDesign = expDesign.drop(['blockId', 'trialId'], axis=1)
+
+# adding stimuli
+stimlist = []
+stimCounter = Counter()
+buttonCounter = Counter()
