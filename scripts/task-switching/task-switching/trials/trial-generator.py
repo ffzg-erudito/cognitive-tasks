@@ -2,7 +2,7 @@
 # which is loaded at startup
 import re
 
-from collections import Counter
+from collections import Counter, defaultdict
 from os.path import join
 
 import pandas as pd
@@ -115,7 +115,7 @@ for segment in expSchema:
 
 expDesign['feedback'] = pd.Series(feedback)
 
-# adding blockname
+# adding blockinfo
 blockInfo = {'blockName': [],
              'blockType': [],
              'blockCondition': []}
@@ -134,6 +134,56 @@ expDesign = pd.concat([expDesign, pd.DataFrame(blockInfo)], axis=1)
 expDesign = expDesign.drop(['blockId', 'trialId'], axis=1)
 
 # adding stimuli
+# tracking last appearance of a number and last use of response key
+expDesign = pd.read_csv(join('task-switching', 'trials', 'design.csv'))
+expDesign.head()
+
 stimlist = []
-stimCounter = Counter()
-buttonCounter = Counter()
+numTracker = defaultdict(lambda: 0)
+responseTracker = Counter()
+i = 0
+for row in expDesign.iterrows():
+    task = row[1].task
+    stimFlag = True
+    print(f'roooooooooou: {row[0]}')
+
+    while stimFlag:
+        i += 1
+        print(i)
+        taskCondition = design.randomize.rand_element(factorStimuli[task])
+        response = correctResponses[taskCondition]
+
+        stimulus = design.randomize.rand_element(
+            factorStimuli[task][taskCondition])
+
+        stimFlag = checkStim(stimulus, task, row[0], factorStimuli, response,
+                             correctResponses, responseTracker, numTracker)
+
+    stimlist.append(stimulus)
+
+
+def checkStim(stimulus, task, rowIndex, factorStimuli, response,
+              correctResponses, responseTracker, numTracker):
+
+    if response not in responseTracker and len(responseTracker) == 0:
+        print('jedan')
+        responseTracker[response] += 1
+    elif response not in responseTracker and len(responseTracker) != 0:
+        print('dva')
+        responseTracker = Counter()
+        responseTracker[response] += 1
+    elif response in responseTracker and responseTracker[response] <= 3:
+        print('tri')
+        responseTracker[response] += 1
+    elif response in responseTracker and responseTracker[response] > 3:
+        print('četiri pad')
+        return True
+
+    if rowIndex >= 3 and rowIndex - numTracker[str(stimulus)] < 3:
+        print('pet pad')
+        return True
+
+    print('prolaz')
+
+    numTracker[str(stimulus)] = rowIndex
+    return False
