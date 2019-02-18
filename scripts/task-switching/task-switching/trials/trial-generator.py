@@ -38,28 +38,29 @@ correctResponses = {'isHigher': misc.constants.K_l,
                     'isOdd': misc.constants.K_a}
 
 # generating pure blocks
-# TODO: popravi broj ponavljaja. sad za svaki task napravi 6 komada. stavi
-# ifelse na početak, pa da kaže ako je i manje od .5 * numPureBlocks jedan
-# zadatak, a ako je veće drugi. trebat će ti enumerate za segment
 numPureBlocks = numBlocks.get('practicePureFeed') +\
     numBlocks.get('practicePureNoFeed') + numBlocks.get('testPure')
 
-for task in ['odd-even', 'high-low']:
-    for segment in expSchema[:numPureBlocks]:
-        if segment[:4] == 'prac':
-            blockName = 'practice'
-        else:
-            blockName == 'test'
+for i, segment in enumerate(expSchema[:numPureBlocks]):
+    if i < numPureBlocks / 2:
+        task = 'odd-even'
+    else:
+        task = 'high-low'
 
-        block = design.Block(blockName)
+    if segment[:4] == 'prac':
+        blockName = 'practice'
+    else:
+        blockName == 'test'
 
-        for _ in range(0, numTrials[segment]):
-            trial = design.Trial()
-            trial.set_factor('task', task)
+    block = design.Block(blockName)
 
-            block.add_trial(trial)
+    for _ in range(0, numTrials[segment]):
+        trial = design.Trial()
+        trial.set_factor('task', task)
 
-        experiment.add_block(block)
+        block.add_trial(trial)
+
+    experiment.add_block(block)
 
 # generating mixed blocks
 taskCounter = Counter()
@@ -77,20 +78,16 @@ for segment in expSchema[numPureBlocks:]:
         trial.set_factor('task', task)
 
         # counting in threes
-        if task not in taskCounter and len(taskCounter) == 0:
+        if task not in taskCounter:
             taskCounter[task] += 1
-        elif task not in taskCounter and len(taskCounter) != 0:
-            taskCounter = Counter()
+        elif task in taskCounter and taskCounter[task] < 2:
             taskCounter[task] += 1
-        elif task in taskCounter and len(taskCounter) == 1 and\
-                taskCounter[task] < 3:
-            taskCounter[task] += 1
-        elif task in taskCounter and len(taskCounter) == 1 and\
-                taskCounter[task] == 3:
+        elif task in taskCounter and taskCounter[task] == 2:
             if task == 'odd-even':
                 task = 'high-low'
             else:
                 task = 'odd-even'
+            taskCounter = Counter()
 
         block.add_trial(trial)
 
