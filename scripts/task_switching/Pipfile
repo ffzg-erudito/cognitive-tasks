@@ -9,9 +9,9 @@ imageio-ffmpeg = "*"
 moviepy = "*"
 pandas = "*"
 numpy = "*"
-web-pdb = "*"
 
 [dev-packages]
+web-pdb = "*"
 
 [requires]
 python_version = "3.7"
