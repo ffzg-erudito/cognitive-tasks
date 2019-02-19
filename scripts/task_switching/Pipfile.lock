@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3d86b3140c1275bd0580a43284389af2a619e28a7b6cd8e1edea09653354bc72"
+            "sha256": "a9741be68ad6dab436cdc8eedaa99873ed0a29e28c9185db2097d4d7231773ca"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,20 @@
         ]
     },
     "default": {
+        "asyncore-wsgi": {
+            "hashes": [
+                "sha256:27ddeecdc4d79c98a687e899c5b7d2df38bb9538b65c92abddd2009f961835a8",
+                "sha256:de043ee1544ae1a2602ef6f8cde41b7bd9f9b29d459e1c1514fa1c655aa7c841"
+            ],
+            "version": "==0.0.9"
+        },
+        "bottle": {
+            "hashes": [
+                "sha256:9c310da61e7df2b6ac257d8a90811899ccb3a9743e77e947101072a2e3186726",
+                "sha256:ca43beafbdccabbe31b758a4f34d1e44985a9b9539516775208b2b0f903eafa0"
+            ],
+            "version": "==0.12.16"
+        },
         "certifi": {
             "hashes": [
                 "sha256:47f9c83ef4c0c621eaef743f133f09fa8a74a9b75f037e8624f83bd1b6626cb7",
@@ -256,6 +270,14 @@
                 "sha256:de9529817c93f27c8ccbfead6985011db27bd0ddfcdb2d86f3f663385c6a9c22"
             ],
             "version": "==1.24.1"
+        },
+        "web-pdb": {
+            "hashes": [
+                "sha256:331023122fe65bebd99a4713c887ee16bf16136d4a7a260c79ab963d0875d3c3",
+                "sha256:f769b2cb7b1ac850727ff2aef5524ad332e8f99080af46873261ee90058bb4bc"
+            ],
+            "index": "pypi",
+            "version": "==1.4.4"
         }
     },
     "develop": {}

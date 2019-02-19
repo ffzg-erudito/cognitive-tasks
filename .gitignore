@@ -2,6 +2,6 @@ scripts/flanker/events
 scripts/flanker/data
 scripts/flanker/**/*.pyc
 
-scripts/task-switching/events
-scripts/task-switching/data
-scripts/task-switching/**/*.pyc
+scripts/task_switching/events
+scripts/task_switching/data
+scripts/task_switching/**/*.pyc

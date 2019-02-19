@@ -2,7 +2,9 @@
 # which is loaded at startup
 import re
 
-from collections import Counter, defaultdict
+from task_switching.trials.trial_generator_helpers import checkStim
+
+from collections import Counter
 from os.path import join
 
 import pandas as pd
@@ -97,10 +99,10 @@ for segment in expSchema[numPureBlocks:]:
 
     experiment.add_block(block)
 
-experiment.save_design(join('task-switching', 'trials', 'design.csv'))
+experiment.save_design(join('task_switching', 'trials', 'design.csv'))
 
 # generating csv with stimuli
-expDesign = pd.read_csv(join('task-switching', 'trials', 'design.csv'))
+expDesign = pd.read_csv(join('task_switching', 'trials', 'design.csv'))
 
 # adding feedback info
 feedback = []
@@ -135,55 +137,30 @@ expDesign = expDesign.drop(['blockId', 'trialId'], axis=1)
 
 # adding stimuli
 # tracking last appearance of a number and last use of response key
-expDesign = pd.read_csv(join('task-switching', 'trials', 'design.csv'))
-expDesign.head()
+stims = {'stimulus': [],
+         'correctResponse': []}
+numTrackerGlob = {}
+responseTrackerGlob = Counter()
 
-stimlist = []
-numTracker = defaultdict(lambda: 0)
-responseTracker = Counter()
-i = 0
 for row in expDesign.iterrows():
     task = row[1].task
     stimFlag = True
-    print(f'roooooooooou: {row[0]}')
 
     while stimFlag:
-        i += 1
-        print(i)
         taskCondition = design.randomize.rand_element(factorStimuli[task])
         response = correctResponses[taskCondition]
 
         stimulus = design.randomize.rand_element(
             factorStimuli[task][taskCondition])
 
-        stimFlag = checkStim(stimulus, task, row[0], factorStimuli, response,
-                             correctResponses, responseTracker, numTracker)
+        stimFlag, responseTrackerGlob = checkStim(stimulus, task, row[0],
+                                                  factorStimuli, response,
+                                                  responseTrackerGlob,
+                                                  numTrackerGlob)
 
-    stimlist.append(stimulus)
+    stims['stimulus'].append(stimulus)
+    stims['correctResponse'].append(response)
 
+expDesign = pd.concat([expDesign, pd.DataFrame(stims)], axis=1)
 
-def checkStim(stimulus, task, rowIndex, factorStimuli, response,
-              correctResponses, responseTracker, numTracker):
-
-    if response not in responseTracker and len(responseTracker) == 0:
-        print('jedan')
-        responseTracker[response] += 1
-    elif response not in responseTracker and len(responseTracker) != 0:
-        print('dva')
-        responseTracker = Counter()
-        responseTracker[response] += 1
-    elif response in responseTracker and responseTracker[response] <= 3:
-        print('tri')
-        responseTracker[response] += 1
-    elif response in responseTracker and responseTracker[response] > 3:
-        print('četiri pad')
-        return True
-
-    if rowIndex >= 3 and rowIndex - numTracker[str(stimulus)] < 3:
-        print('pet pad')
-        return True
-
-    print('prolaz')
-
-    numTracker[str(stimulus)] = rowIndex
-    return False
+expDesign.to_csv(join('task_switching', 'trials', 'design.csv'))

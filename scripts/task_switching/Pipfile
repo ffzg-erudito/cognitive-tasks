@@ -9,6 +9,7 @@ imageio-ffmpeg = "*"
 moviepy = "*"
 pandas = "*"
 numpy = "*"
+web-pdb = "*"
 
 [dev-packages]
 
