@@ -163,4 +163,26 @@ for row in expDesign.iterrows():
 
 expDesign = pd.concat([expDesign, pd.DataFrame(stims)], axis=1)
 
+# add task-switch info
+switchInfo = []
+
+for i in range(0, expDesign.shape[0] - 1):
+    currentRow = expDesign.iloc[i]
+    nextRow = expDesign.iloc[i + 1]
+
+    currentTask = currentRow.task
+    nextTask = nextRow.task
+
+    currentBlock = currentRow.blockName
+    nextBlock = nextRow.blockName
+
+    if currentTask != nextTask and currentBlock == nextBlock:
+        switchInfo.append(i + 1)
+
+switch = ['nonSwitch' if i not in switchInfo else 'switch'
+          for i in range(0, expDesign.shape[0])]
+
+expDesign = pd.concat([expDesign, pd.Series(name='switch', data=switch)],
+                      axis=1)
+
 expDesign.to_csv(join('task_switching', 'trials', 'design.csv'))
