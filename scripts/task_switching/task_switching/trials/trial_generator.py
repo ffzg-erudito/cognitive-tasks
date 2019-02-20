@@ -185,4 +185,5 @@ switch = ['nonSwitch' if i not in switchInfo else 'switch'
 expDesign = pd.concat([expDesign, pd.Series(name='switch', data=switch)],
                       axis=1)
 
-expDesign.to_csv(join('task_switching', 'trials', 'design.csv'))
+expDesign.to_csv(join('task_switching', 'trials', 'design.csv'),
+                 index=False)
