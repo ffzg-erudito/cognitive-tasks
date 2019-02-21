@@ -8,7 +8,7 @@
 
 
 
-function [subjectID, pTrials, xTrials, antiSaccadeProportion] = Stroop(subjectID, pTrials, xTrials, antiSaccadeProportion)
+function [subjectID] = Stroop(subjectID)
 
 debug_mode = 0;
 use_mouse = 1;
@@ -137,10 +137,13 @@ answer_x_positions = [xCenter - 260, xCenter + 60];
 %% DEFINE TRIALS
 
 % Practice trials
-my_practice_trials = repmat(my_design, 2, 1);
+my_practice_trials = repmat(my_design, 3, 1);
+my_practice_trials = my_practice_trials(1:end-4, :);
+
 
 % Experimental trials
-my_experimental_trials = repmat(my_design, 12, 1);
+my_experimental_trials = repmat(my_design, 13, 1);
+my_experimental_trials = my_experimental_trials(1:end-4, :);
 
 % RANDOMIZE ORDER
 my_practice_trials = my_practice_trials(randperm(size(my_practice_trials, 1)), :);
@@ -160,7 +163,13 @@ KbQueueCreate(0, keylist);
 
 %% TRIALS START HERE %%
 for trial = 1 : num_trials
-    trial_string = num2str(trial);
+    
+    % trial_string will be displayed to the participant
+    if trial < (size(my_practice_trials, 1) + 1)
+        trial_string = num2str(21 - trial);
+    else
+        trial_string = num2str(121- trial);
+    end
     target = my_trials{trial, 2};
 
 
@@ -242,7 +251,7 @@ for trial = 1 : num_trials
     if trial == 1
         
         % POÄŒETNE UPUTE
-        for uputa = 1 : 3
+        for uputa = 1 : 4
             
             switch(uputa)
                 case 1
@@ -256,16 +265,31 @@ for trial = 1 : num_trials
                                 'točan odgovor je riječ "CRVENA", neovisno o tome kojom bojom je otisnuta!\n\n' ...
                                 'Svoj odgovor odaberite pritiskom na strelicu lijevo, ako je Vaš odgovor lijeva riječ,\n' ...
                                 'ili strelicu desno, ako je Vaš odgovor desna riječ.\n\n' ...
-                                'U prvom dijelu ćete proći kroz niz pokušaja za vježbu.\n\n\n\nPritisnite ENTER za nastavak upute.'];
+                                'Na sljedećem prikazu vidjet ćete nekoliko primjera.\nObratite pozornost na ' ...
+                                'odnos BOJE gornje riječi i\ntočnog odgovora, koji je zaokružen zelenom bojom.\n\n' ...
+                                'Pritisnite ENTER za nastavak upute.'];
                 case 3
-                    instruction = ['ODGOVARAJTE ŠTO BRŽE MOŽETE, BEZ GREŠAKA.\n\nNakon što date svoj odgovor, ' ...
+                    instruction = [];
+                
+                case 4
+                    instruction = ['U prvom dijelu ćete proći kroz 20 pokušaja za vježbu.\n\n' ...
+                                'ODGOVARAJTE ŠTO BRŽE MOŽETE, BEZ GREŠAKA.\n\nNakon što date svoj odgovor, ' ...
                                 'na ekranu će se\nprikazati ZELENI kvadrat ukoliko ste odgovorili TOČNO,\na CRVENI ' ...
                                 'ukoliko ste odgovorili NETOČNO.\n\n\nPritisnite ENTER za početak vježbe.'];
             end
             
-            DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
-            Screen('Flip', window);
-            WaitSecs(1);
+            if isempty(instruction)
+                examples = 'examples.tif';
+                image = imread(examples, 'tif');
+                Screen('PutImage', window, image);
+                DrawFormattedText(window, 'Pritisnite ENTER za nastavak upute.', 'center', 950, white, [], [], [], 1.5);
+                Screen('Flip', window);
+                WaitSecs(1);
+            else
+                DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
+                Screen('Flip', window);
+                WaitSecs(1);
+            end
             
             % Wait for return press
             while 1
@@ -286,60 +310,51 @@ for trial = 1 : num_trials
     elseif trial == (size(my_practice_trials, 1) + 1)
         
         % PRIKAZ UPUTE PRIJE MJERENJA
-%         for uputa = 1 : 1
-%             
-%             switch(uputa)
-%                 case 1
-            instruction = ['Vježba je završena! Sada slijedi mjerenje!\n\n' ...
-                        'Zadatak će biti istog oblika kao ovaj kroz kojeg ste\nupravo prošli.\n\n\n' ...
-                        'ODGOVARAJTE ŠTO BRŽE MOŽETE, BEZ GREŠAKA.\n\n\n'...
-                        'Kada ste spremni, smjestite prste na tipke za odgovore,\n' ...
-                        'i pritisnite ENTER kako biste započeli mjerenje!'];
-            DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
-            [before_main_onset] = Screen('Flip', window, feedback_onset + 0.8);
-            WaitSecs(1);
-%                 case 2
-%                     instruction = 
-%                     DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
-%                     Screen('Flip', window);
-%                     WaitSecs(1);
-%             end
-            
-            
-            % Wait for return press
-            while 1
-                [~, keyCode] = KbWait;
-                
-                % return press continues the experiment
-                if keyCode(KbName('return')) == 1
-                    break;
-                    % ESC key quits the experiment
-                elseif keyCode(escape) == 1
-                    clear all
-                    sca
-                    return
-                end
+        instruction = ['Vježba je završena!\n\nSada slijedi glavni zadatak u kojemu ćete proći kroz 100 pokušaja!\n\n' ...
+                    'Zadatak će biti istog oblika kao ovaj kroz kojeg ste\nupravo prošli.\n\n\n' ...
+                    'ODGOVARAJTE ŠTO BRŽE MOŽETE, BEZ GREŠAKA.\n\n\n'...
+                    'Kada ste spremni, smjestite prste na tipke za odgovore,\n' ...
+                    'i pritisnite ENTER kako biste započeli mjerenje!'];
+        DrawFormattedText(window, instruction, 'center', 'center', white, [], [], [], 1.5);
+        [before_main_onset] = Screen('Flip', window, feedback_onset + 0.8);
+        WaitSecs(1);
+
+
+        % Wait for return press
+        while 1
+            [~, keyCode] = KbWait;
+
+            % return press continues the experiment
+            if keyCode(KbName('return')) == 1
+                break;
+                % ESC key quits the experiment
+            elseif keyCode(escape) == 1
+                clear all
+                sca
+                return
             end
         end
+    end
     
     
     pressed = 0;
     Screen('FillRect', window, backgroundColor);
-    DrawFormattedText(window, trial_string, 'center', 100, white);
+    DrawFormattedText(window, trial_string, 'center', 150, white);
     if trial == (size(my_practice_trials, 1) + 1)
         [start_blank_onset] = Screen('Flip', window, before_main_onset + 0.8);
         WaitSecs(1);
     elseif trial > 1
         [start_blank_onset] = Screen('Flip', window, feedback_onset + 0.8);
     else
-        [start_blank_onset] = Screen('Flip', window, 0.8);
+        [start_blank_onset] = Screen('Flip', window);
+        WaitSecs(1);
     end
     
     
     %% DRAW ARRAY
     
     % DRAW TRIAL NUMBER
-    DrawFormattedText(window, trial_string, 'center', 100, white);
+    DrawFormattedText(window, trial_string, 'center', 150, white);
 
     
     % DRAW TARGET
@@ -353,6 +368,12 @@ for trial = 1 : num_trials
 
     KbQueueFlush();
     [array_onset] = Screen('Flip', window, start_blank_onset);
+    
+    % used these two lines of code to take printscreens so I can use them
+    % for examples:
+%     screen_image = Screen('GetImage', window);
+%     imwrite(screen_image, [num2str(trial), 'test.tif']);
+
     KbQueueStart(); % start collecting key presses
 
     
@@ -364,7 +385,7 @@ for trial = 1 : num_trials
     if find(pressTime) == correct_response
         R = 1;
         Screen('DrawDots', window, [xCenter (yCenter + 100)], 25, green);
-        DrawFormattedText(window, trial_string, 'center', 100, white);
+        DrawFormattedText(window, trial_string, 'center', 150, white);
         [feedback_onset] = Screen('Flip', window);
     elseif pressTime(escape) > 1  % is 'escape' pressed?
         clear all
@@ -374,7 +395,7 @@ for trial = 1 : num_trials
     else
         R = 0;
         Screen('DrawDots', window, [xCenter (yCenter + 100)], 25, red);
-        DrawFormattedText(window, trial_string, 'center', 100, white);
+        DrawFormattedText(window, trial_string, 'center', 150, white);
         [feedback_onset] = Screen('Flip', window);
     end
     
@@ -400,7 +421,7 @@ end
 
 Screen('FillRect', window, backgroundColor);
 [final_blank_time] = Screen('Flip', window);
-DrawFormattedText(window, 'KRAJ ZADATKA.\n\n\n\n\nPOZOVITE EKSPERIMENTATORA.' , 'center', 'center', white);
+DrawFormattedText(window, 'KRAJ ZADATKA\n\n\n\n\nPOZOVITE EKSPERIMENTATORA' , 'center', 'center', white);
 Screen('Flip', window, final_blank_time + 1);
 
 WaitSecs(5);
