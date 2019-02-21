@@ -68,15 +68,14 @@ out_path = 'C:\Users\Matej\Desktop\'; % za moj laptop
 
 % other major variables
 date_string = datestr(clock, 'yyyy-mm-dd-HH-MM');
-formatString = '\r\n%s\t %s\t %d\t %d\t %d\t'; % this is for data output
-% saved: subject code, trial type, fixation duration, correct?, reaction
-% time
+formatString = '\r\n%s\t %s\t %d\t %d\t %d\t %d\t'; % this is for data output
+% saved: subject code, trial type, correct?, reaction time, duration
 
 dataFileName = ([out_path, 'stroop_rezultati_',date_string, '_', subjectID, '.xls']);
 
 if exist(dataFileName, 'file') == 0
     dataFile = fopen(dataFileName, 'a');
-    fprintf(dataFile, 'Å ifra ispitanika\t Situacija\t Tocno?\t Vrijeme reakcije');
+    fprintf(dataFile, 'Šifra ispitanika\t Situacija\t Točno?\t Vrijeme reakcije\t Trajanje mjerenja');
     fclose('all');
 end
 
@@ -350,6 +349,9 @@ for trial = 1 : num_trials
         WaitSecs(1);
     end
     
+    if trial == (size(my_practice_trials, 1) + 1)
+        start_time = GetSecs;
+    end
     
     %% DRAW ARRAY
     
@@ -384,6 +386,11 @@ for trial = 1 : num_trials
     
     if find(pressTime) == correct_response
         R = 1;
+        if trial == num_trials
+            duration = GetSecs - start_time
+        else
+            duration = [];
+        end
         Screen('DrawDots', window, [xCenter (yCenter + 100)], 25, green);
         DrawFormattedText(window, trial_string, 'center', 150, white);
         [feedback_onset] = Screen('Flip', window);
@@ -394,6 +401,11 @@ for trial = 1 : num_trials
         return
     else
         R = 0;
+        if trial == num_trials
+            duration = GetSecs - start_time;
+        else
+            duration = [];
+        end
         Screen('DrawDots', window, [xCenter (yCenter + 100)], 25, red);
         DrawFormattedText(window, trial_string, 'center', 150, white);
         [feedback_onset] = Screen('Flip', window);
@@ -405,7 +417,7 @@ for trial = 1 : num_trials
     RT = pressTime(pressTime > 0) - array_onset;
     
     dataFile = fopen(dataFileName, 'a');
-    fprintf(dataFile, formatString, subjectID, trial_type, R, RT);
+    fprintf(dataFile, formatString, subjectID, trial_type, R, RT, duration);
     fclose(dataFile);
     Screen('Close');
 end
@@ -424,7 +436,7 @@ Screen('FillRect', window, backgroundColor);
 DrawFormattedText(window, 'KRAJ ZADATKA\n\n\n\n\nPOZOVITE EKSPERIMENTATORA' , 'center', 'center', white);
 Screen('Flip', window, final_blank_time + 1);
 
-WaitSecs(5);
+WaitSecs(3);
 
 clear all
 sca

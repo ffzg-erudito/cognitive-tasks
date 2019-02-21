@@ -282,7 +282,7 @@ for trial = 1 : num_trials
                 examples = 'examples.tif';
                 image = imread(examples, 'tif');
                 Screen('PutImage', window, image);
-                DrawFormattedText(window, 'Pritisnite ENTER za nastavak upute.', 'center', 'center', white, [], [], [], 1.5);
+                DrawFormattedText(window, 'Pritisnite ENTER za nastavak upute.', 'center', 950, white, [], [], [], 1.5);
                 Screen('Flip', window);
                 WaitSecs(1);
             else
@@ -350,6 +350,7 @@ for trial = 1 : num_trials
         WaitSecs(1);
     end
     
+    if trial == my_
     
     %% DRAW ARRAY
     
@@ -368,8 +369,12 @@ for trial = 1 : num_trials
 
     KbQueueFlush();
     [array_onset] = Screen('Flip', window, start_blank_onset);
-    screen_image = Screen('GetImage', window);
-    imwrite(screen_image, [num2str(trial), 'test.tif']);
+    
+    % used these two lines of code to take printscreens so I can use them
+    % for examples:
+%     screen_image = Screen('GetImage', window);
+%     imwrite(screen_image, [num2str(trial), 'test.tif']);
+
     KbQueueStart(); % start collecting key presses
 
     
@@ -417,7 +422,7 @@ end
 
 Screen('FillRect', window, backgroundColor);
 [final_blank_time] = Screen('Flip', window);
-DrawFormattedText(window, 'KRAJ ZADATKA.\n\n\n\n\nPOZOVITE EKSPERIMENTATORA.' , 'center', 'center', white);
+DrawFormattedText(window, 'KRAJ ZADATKA\n\n\n\n\nPOZOVITE EKSPERIMENTATORA' , 'center', 'center', white);
 Screen('Flip', window, final_blank_time + 1);
 
 WaitSecs(5);
