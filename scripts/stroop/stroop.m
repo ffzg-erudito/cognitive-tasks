@@ -46,7 +46,8 @@ screenRect = Screen('Rect', whichScreen);
 subjectID = '';
 while length(subjectID) ~= 6 || sum(isletter(subjectID(1:4))) < 4 || isnan(str2double(subjectID(5:6)))
     
-    prompt = {'SIFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona)'};
+    prompt = {'SIFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona. ' ...
+        'Nemojte koristiti dijakriticke znakove, a slova poput "nj" tretirajte kao dva slova)'};
     defaults = {''};
     answer = inputdlg(prompt, 'Postavke', 1, defaults);
     
@@ -57,14 +58,12 @@ while length(subjectID) ~= 6 || sum(isletter(subjectID(1:4))) < 4 || isnan(str2d
 end
 
 
-
 %% SET UP RESULT FILE
 
 % Define output path - OVDJE STAVITI ADRESU DESKTOPA:
 % out_path = 'C:\Users\matpa\Desktop\'; % laptop u uredu
-out_path = 'C:\Users\Matej\Desktop\'; % za moj laptop
-% out_path = 'C:\Users\student\Desktop\'; % za mali praktikum
-
+% out_path = 'C:\Users\Matej\Desktop\'; % za moj laptop
+out_path = 'C:\Users\student\Desktop\'; % za mali praktikum
 
 % other major variables
 date_string = datestr(clock, 'yyyy-mm-dd-HH-MM');
@@ -87,7 +86,6 @@ end
 Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 
 Screen('TextFont', window , 'Helvetica');
-
 fontSize = 50;
 
 Screen('TextSize', window, fontSize);
@@ -98,7 +96,6 @@ HideCursor;
 
 
 %% KEYBOARD SETUP
-
 KbName('UnifyKeyNames');
 left_arrow = KbName('leftarrow');
 right_arrow = KbName('rightarrow');
@@ -134,17 +131,15 @@ answer_x_positions = [xCenter - 260, xCenter + 60];
 
 
 %% DEFINE TRIALS
-
 % Practice trials
 my_practice_trials = repmat(my_design, 3, 1);
 my_practice_trials = my_practice_trials(1:end-4, :);
-
 
 % Experimental trials
 my_experimental_trials = repmat(my_design, 13, 1);
 my_experimental_trials = my_experimental_trials(1:end-4, :);
 
-% RANDOMIZE ORDER
+% RANDOMIZE THEIR ORDER
 my_practice_trials = my_practice_trials(randperm(size(my_practice_trials, 1)), :);
 my_experimental_trials = my_experimental_trials(randperm(size(my_experimental_trials, 1)), :);
 
@@ -169,8 +164,8 @@ for trial = 1 : num_trials
     else
         trial_string = num2str(121- trial);
     end
+    
     target = my_trials{trial, 2};
-
 
     % RANDOMIZE POSITION OF ANSWERS
     index_to_ans_positions = randsample(2, 2);
@@ -192,8 +187,7 @@ for trial = 1 : num_trials
             % (npr. answer_1 == 'CRVENA')
             answer_1_color = red;
             answer_2_color = green;
-              
-                
+                   
         case 2 % congruent target, incogruent answers
             trial_type = 'congruent target, incongruent answers';
             
@@ -249,7 +243,7 @@ for trial = 1 : num_trials
     %% UPUTE
     if trial == 1
         
-        % POÄŒETNE UPUTE
+        % POČETNE UPUTE
         for uputa = 1 : 4
             
             switch(uputa)
@@ -335,7 +329,6 @@ for trial = 1 : num_trials
         end
     end
     
-    
     pressed = 0;
     Screen('FillRect', window, backgroundColor);
     DrawFormattedText(window, trial_string, 'center', 150, white);
@@ -358,7 +351,6 @@ for trial = 1 : num_trials
     % DRAW TRIAL NUMBER
     DrawFormattedText(window, trial_string, 'center', 150, white);
 
-    
     % DRAW TARGET
     DrawFormattedText(window, target, 'center', 'center', target_color);
     
@@ -381,13 +373,13 @@ for trial = 1 : num_trials
     
     %% WAIT FOR USER INPUT %%
     while pressed == 0
-        [pressed, pressTime, keyCode] = KbQueueCheck;
+        [pressed, pressTime] = KbQueueCheck;
     end
     
     if find(pressTime) == correct_response
         R = 1;
         if trial == num_trials
-            duration = GetSecs - start_time
+            duration = GetSecs - start_time;
         else
             duration = [];
         end
@@ -413,23 +405,13 @@ for trial = 1 : num_trials
     
     
     %% SAVE TRIAL DATA
-    
     RT = pressTime(pressTime > 0) - array_onset;
-    
     dataFile = fopen(dataFileName, 'a');
     fprintf(dataFile, formatString, subjectID, trial_type, R, RT, duration);
     fclose(dataFile);
     Screen('Close');
+   
 end
-
-
-
-
-%% SAVE TRIAL DATA %%
-% note that you should open and close the file every time you write to it, otherwise you may lose data in crashes
-% pTrials are saved as non positive integers. The first practice trial is the lowest of these!
-% U XLSX FILE SE U SVAKI REDAK UPISUJU IME I PREZIME, SITUACIJA, TE PO STUPCIMA ODABRANE VELI?INE TESTNIH KRUGOVA
-
 
 Screen('FillRect', window, backgroundColor);
 [final_blank_time] = Screen('Flip', window);
@@ -441,14 +423,4 @@ WaitSecs(3);
 clear all
 sca
 
-
-end
-
-
-%%
-function px = PosToPixels(pos, screen, uncentered)
-if nargin<3
-    uncentered = 0;
-end
-px = round((pos./repmat(screen.size,1,size(pos,2)) + 0.5*(uncentered==0)).*repmat(screen.res,1,size(pos,2)));
 end
