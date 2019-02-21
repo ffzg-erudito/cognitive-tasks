@@ -306,9 +306,9 @@ for i, block in enumerate(experiment.blocks):
                              blockName,
                              isSwitchTrial])
 
-        if testMixedCnt == 1:
-            breakBlockInstructions.present()
-            experiment.keyboard.wait(misc.constants.K_RETURN)
-            testMixedCnt += 1
+    if testMixedCnt == 1:
+        breakBlockInstructions.present()
+        experiment.keyboard.wait(misc.constants.K_RETURN)
+        testMixedCnt += 1
 
 control.end()
