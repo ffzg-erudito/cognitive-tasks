@@ -46,7 +46,7 @@ screenRect = Screen('Rect', whichScreen);
 subjectID = '';
 while length(subjectID) ~= 6 || sum(isletter(subjectID(1:4))) < 4 || isnan(str2double(subjectID(5:6)))
     
-    prompt = {'ŠIFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona)'};
+    prompt = {'SIFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona)'};
     defaults = {''};
     answer = inputdlg(prompt, 'Postavke', 1, defaults);
     
@@ -131,7 +131,7 @@ my_design(:, 2) = strrep(my_design(:,2),{'Z'}, {'ZELENA'});
 answer_1 = 'CRVENA';
 answer_2 = 'ZELENA';
 answer_y_pos = yCenter + 110;
-answer_x_positions = [xCenter - 250, xCenter + 60];
+answer_x_positions = [xCenter - 260, xCenter + 60];
 
 
 %% DEFINE TRIALS
@@ -160,6 +160,7 @@ KbQueueCreate(0, keylist);
 
 %% TRIALS START HERE %%
 for trial = 1 : num_trials
+    trial_string = num2str(trial);
     target = my_trials{trial, 2};
 
 
@@ -226,11 +227,11 @@ for trial = 1 : num_trials
     end
     
     % DETERMINE WHAT THE CORRECT RESPONSE IS
-    if (all(target_color == red) && (pos_x_answ_1 == xCenter - 250))
+    if (all(target_color == red) && (pos_x_answ_1 == xCenter - 260))
         correct_response = left_arrow;
     elseif (all(target_color == red) && (pos_x_answ_1 == xCenter + 60))
         correct_response = right_arrow;
-    elseif (all(target_color == green) && (pos_x_answ_2 == xCenter - 250))
+    elseif (all(target_color == green) && (pos_x_answ_2 == xCenter - 260))
         correct_response = left_arrow;
     elseif (all(target_color == green) && (pos_x_answ_2 == xCenter + 60))
         correct_response = right_arrow;
@@ -324,8 +325,10 @@ for trial = 1 : num_trials
     
     pressed = 0;
     Screen('FillRect', window, backgroundColor);
+    DrawFormattedText(window, trial_string, 'center', 100, white);
     if trial == (size(my_practice_trials, 1) + 1)
         [start_blank_onset] = Screen('Flip', window, before_main_onset + 0.8);
+        WaitSecs(1);
     elseif trial > 1
         [start_blank_onset] = Screen('Flip', window, feedback_onset + 0.8);
     else
@@ -334,6 +337,11 @@ for trial = 1 : num_trials
     
     
     %% DRAW ARRAY
+    
+    % DRAW TRIAL NUMBER
+    DrawFormattedText(window, trial_string, 'center', 100, white);
+
+    
     % DRAW TARGET
     DrawFormattedText(window, target, 'center', 'center', target_color);
     
@@ -344,7 +352,7 @@ for trial = 1 : num_trials
     DrawFormattedText(window, answer_2, pos_x_answ_2, answer_y_pos, answer_2_color);
 
     KbQueueFlush();
-    [array_onset] = Screen('Flip', window, start_blank_onset + 0.1);
+    [array_onset] = Screen('Flip', window, start_blank_onset);
     KbQueueStart(); % start collecting key presses
 
     
@@ -356,6 +364,7 @@ for trial = 1 : num_trials
     if find(pressTime) == correct_response
         R = 1;
         Screen('DrawDots', window, [xCenter (yCenter + 100)], 25, green);
+        DrawFormattedText(window, trial_string, 'center', 100, white);
         [feedback_onset] = Screen('Flip', window);
     elseif pressTime(escape) > 1  % is 'escape' pressed?
         clear all
@@ -365,6 +374,7 @@ for trial = 1 : num_trials
     else
         R = 0;
         Screen('DrawDots', window, [xCenter (yCenter + 100)], 25, red);
+        DrawFormattedText(window, trial_string, 'center', 100, white);
         [feedback_onset] = Screen('Flip', window);
     end
     
