@@ -16,16 +16,83 @@ control.defaults.goodbye_text = '''Zadatak je gotov. Molim Vas, pozovite\
 control.defaults.goodbye_delay = 5000
 control.defaults.fast_quit = False
 
+# experiment variables
 blankDuration = 100
 stimDuration = 1500
 
-# experiment variables
-correctResponses = {'isHigher': misc.constants.K_l,
-                    'isEven': misc.constants.K_l,
-                    'isLower': misc.constants.K_a,
-                    'isOdd': misc.constants.K_a}
+# instructions
+instructionsIntro = '''Sada ćete rješavati jedan zadatak biranog reagiranja.
 
-# TODO: instructions
+Na sredini zaslona će se pojavljivati brojke od 1 do 9, osim broja 5, a Vaš je\
+ zadatak da donesete jednu od dvije moguće procjene.
+
+Pritisnite ENTER za nastavak upute.'''
+
+instructionsGeneral1 = '''Prva procjena koju ćete trebati donijeti jest je li\
+ prikazani broj paran ili neparan.
+
+Druga procjena jest je li prikazani broj veći li manji od 5.
+
+Pritisnite ENTER za nastavak upute.'''
+
+instructionsGeneral2 = '''Ako je broj prikazan u BIJELOM kvadratu, trebate\
+ procijeniti je li on paran ili neparan.
+
+Ako je broj prikazan u SIVOM kvadratu, trebate procijeniti je li on veći ili\
+ manji od 5.
+
+Pritisnite ENTER za nastavak upute.'''
+
+instructionsOddEvenPractice = '''Sada ćete uvježbavati procjenu parnosti broja.
+
+Ako je prikazani broj PARAN, pritisnite tipku L na tipkovnici.
+
+Ako je prikazani broj NEPARAN, pritisnite tipku A na tipkovnici.
+
+Sad ćete proći kroz nekoliko pokušaja za uvježbavanje, pri čemu ćete dobivati\
+ povratnu informaciju o točnosti.
+
+Pritisnite ENTER kako biste započeli pokušaje za uvježbavanje.'''
+
+instructionsOddEvenTest = '''Došli ste do kraja pokušaja za uvježbavanje.
+
+Slijede testni pokušaji, u kojima nećete dobivati povratnu informaciju o\
+ točnosti.
+
+Ako imate pitanja, sad je dobro vrijeme za postaviti ih. U protivnom,\
+ pritisnite ENTER kako biste započeli s testnim pokušajima.'''
+
+instructionsHighLowPractice = '''Sada ćete uvježbavati procjenu veličine broja.
+
+Ako je prikazani broj VEĆI od 5, pritisnite tipku L na tipkovnici.
+
+Ako je prikazani broj MANJI od 5, pritisnite tipku A na tipkovnici.
+
+Sad ćete proći kroz nekoliko pokušaja za uvježbavanje, pri čemu ćete dobivati\
+ povratnu informaciju o točnosti.
+
+Pritisnite ENTER kako biste započeli pokušaje za uvježbavanje.'''
+
+instructionsHighLowTest = '''Došli ste do kraja pokušaja za uvježbavanje.
+
+Slijede testni pokušaji, u kojima nećete dobivati povratnu informaciju o\
+ točnosti.
+
+Ako imate pitanja, sad je dobro vrijeme za postaviti ih. U protivnom,\
+ pritisnite ENTER kako biste započeli s testnim pokušajima.'''
+
+instructionsMixed = '''U ostatku zadatka, procjene parnosti i veličine\
+ prikazanog broja pravilno će se izmijenjivati.
+
+Napominjemo, ako je Vaš zadatak procijeniti PARNOST broja, broj će biti\
+ prikazan u BIJELOM kvadratu.
+
+Ako je Vaš zadatak procijeniti VELIČINU broja, broj će biti prikazan u\
+ BIJELOM kvadratu.
+
+Pritisnite ENTER za nastavak upute.'''
+
+instructionsMixedPractice = ''''''
 
 # improting design
 expDesign = pd.read_csv(join('task_switching', 'trials', 'design.csv'))
