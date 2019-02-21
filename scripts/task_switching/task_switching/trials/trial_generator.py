@@ -185,5 +185,11 @@ switch = ['nonSwitch' if i not in switchInfo else 'switch'
 expDesign = pd.concat([expDesign, pd.Series(name='switch', data=switch)],
                       axis=1)
 
+expDesign.blockName = expDesign.apply(
+    lambda x: x.blockName + 'OE' if x.task == 'odd-even' and
+    x.blockCondition == 'pure'
+    else x.blockName + 'HL' if x.task == 'high-low' and
+    x.blockCondition == 'pure' else x.blockName, axis=1)
+
 expDesign.to_csv(join('task_switching', 'trials', 'design.csv'),
                  index=False)

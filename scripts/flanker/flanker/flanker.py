@@ -55,7 +55,9 @@ subCodeText = '''Molimo Vas, unesite svoju šifru - prva dva slova imena majke,\
  telefona.
 
 Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj"\
- tretirajte kao dva slova.'''
+ tretirajte kao dva slova.
+
+Svoj unos potvrdite pritiskom tipke ENTER.'''
 
 # experiment variables
 trialsPerCondInTest = 4
@@ -145,13 +147,13 @@ instructions1 = stimuli.TextScreen(heading='Uputa', text=instructionsText1)
 instructions2 = stimuli.TextScreen(heading='', text=instructionsText2)
 instructions3 = stimuli.TextScreen(heading='', text=instructionsText3)
 
-feedBackCorrect = stimuli.TextLine(text='Točno!',
+feedbackCorrect = stimuli.TextLine(text='Točno!',
                                    text_colour=misc.constants.C_GREEN)
-feedBackCorrect.preload()
+feedbackCorrect.preload()
 
-feedBackIncorrect = stimuli.TextLine(text='Pogrešno!',
+feedbackIncorrect = stimuli.TextLine(text='Pogrešno!',
                                      text_colour=misc.constants.C_RED)
-feedBackIncorrect.preload()
+feedbackIncorrect.preload()
 
 subCode = ''
 
@@ -183,11 +185,11 @@ for blockNo, block in enumerate(experiment.blocks):
             key, rt = experiment.keyboard.wait([misc.constants.K_a,
                                                 misc.constants.K_l])
             if key == correctResponses[target]:
-                feedBackCorrect.present()
+                feedbackCorrect.present()
                 experiment.clock.wait(1000)
                 isCorrect = 1
             else:
-                feedBackIncorrect.present()
+                feedbackIncorrect.present()
                 experiment.clock.wait(1000)
                 isCorrect = 0
 
