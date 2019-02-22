@@ -10,4 +10,5 @@ regardless of its colour (i.e. it could very well be written in green colour).
 
 The participant either responds with the left and right arrow keys (stroop_arrows.m) or the left and right CTRL (stroop_ctrl.m)
 
-## TO-DO: consider implementing a fail-safe warning mechanism if participants respond too slowly
+## TO-DO:
+- consider implementing a fail-safe warning mechanism if participants respond too slowly
