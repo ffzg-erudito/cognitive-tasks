@@ -2,7 +2,7 @@
 %
 %   This function creates a block of trials for a Stroop task
 %
-%   Matej Pavlic, 201'
+%   Matej Pavlic, 2019'
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -46,8 +46,8 @@ screenRect = Screen('Rect', whichScreen);
 subjectID = '';
 while length(subjectID) ~= 6 || sum(isletter(subjectID(1:4))) < 4 || isnan(str2double(subjectID(5:6)))
     
-    prompt = {'SIFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona. ' ...
-        'Nemojte koristiti dijakriticke znakove, a slova poput "nj" tretirajte kao dva slova)'};
+    prompt = {['SIFRA (prva dva slova imena oca, posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog telefona. ' ...
+        'Nemojte koristiti dijakriticke znakove, a slova poput "nj" tretirajte kao dva slova)']};
     defaults = {''};
     answer = inputdlg(prompt, 'Postavke', 1, defaults);
     
@@ -97,10 +97,10 @@ HideCursor;
 
 %% KEYBOARD SETUP
 KbName('UnifyKeyNames');
-left_arrow = KbName('leftarrow');
-right_arrow = KbName('rightarrow');
+left_ctrl = KbName('LeftControl');
+right_ctrl = KbName('RightControl');
 escape = KbName('escape');
-KbCheckList = [KbName('return'), left_arrow, right_arrow, escape];
+KbCheckList = [KbName('return'), left_ctrl, right_ctrl, escape];
 RestrictKeysForKbCheck(KbCheckList);
 
 
@@ -148,7 +148,7 @@ num_trials = size(my_trials, 1);
 
 
 %% EXPERIMENT STARTS HERE %%
-keys = [left_arrow right_arrow escape];
+keys = [left_ctrl right_ctrl escape];
 keylist = zeros(1, 256);
 keylist(keys) = 1;
 
@@ -230,13 +230,13 @@ for trial = 1 : num_trials
     
     % DETERMINE WHAT THE CORRECT RESPONSE IS
     if (all(target_color == red) && (pos_x_answ_1 == xCenter - 260))
-        correct_response = left_arrow;
+        correct_response = left_ctrl;
     elseif (all(target_color == red) && (pos_x_answ_1 == xCenter + 60))
-        correct_response = right_arrow;
+        correct_response = right_ctrl;
     elseif (all(target_color == green) && (pos_x_answ_2 == xCenter - 260))
-        correct_response = left_arrow;
+        correct_response = left_ctrl;
     elseif (all(target_color == green) && (pos_x_answ_2 == xCenter + 60))
-        correct_response = right_arrow;
+        correct_response = right_ctrl;
     end
     
         
@@ -256,8 +256,8 @@ for trial = 1 : num_trials
                 case 2
                     instruction = ['Na primjer, ako je gornja riječ "ZELENA" otisnuta CRVENOM BOJOM,\n' ...
                                 'točan odgovor je riječ "CRVENA", neovisno o tome kojom bojom je otisnuta!\n\n' ...
-                                'Svoj odgovor odaberite pritiskom na strelicu lijevo, ako je Vaš odgovor lijeva riječ,\n' ...
-                                'ili strelicu desno, ako je Vaš odgovor desna riječ.\n\n' ...
+                                'Svoj odgovor odaberite pritiskom na lijevi CTRL, ako je Vaš odgovor\nlijeva riječ, ' ...
+                                'ili desni CTRL, ako je Vaš odgovor desna riječ.\n\n' ...
                                 'Na sljedećem prikazu vidjet ćete nekoliko primjera.\nObratite pozornost na ' ...
                                 'odnos BOJE gornje riječi i\ntočnog odgovora, koji je zaokružen zelenom bojom.\n\n' ...
                                 'Pritisnite ENTER za nastavak upute.'];
@@ -369,8 +369,6 @@ for trial = 1 : num_trials
 %     imwrite(screen_image, [num2str(trial), 'test.tif']);
 
     KbQueueStart(); % start collecting key presses
-
-    
     %% WAIT FOR USER INPUT %%
     while pressed == 0
         [pressed, pressTime] = KbQueueCheck;
