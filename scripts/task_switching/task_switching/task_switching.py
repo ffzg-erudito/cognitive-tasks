@@ -8,7 +8,7 @@ import pandas as pd
 from expyriment import control, design, io, misc, stimuli
 
 # DEV MODE
-control.set_develop_mode(True)
+control.set_develop_mode(False)
 
 # localization
 control.defaults.goodbye_text = '''Zadatak je gotov. Molim Vas, pozovite\

@@ -148,11 +148,13 @@ instructions2 = stimuli.TextScreen(heading='', text=instructionsText2)
 instructions3 = stimuli.TextScreen(heading='', text=instructionsText3)
 
 feedbackCorrect = stimuli.TextLine(text='Točno!',
-                                   text_colour=misc.constants.C_GREEN)
+                                   text_colour=misc.constants.C_GREEN,
+                                   text_bold=True)
 feedbackCorrect.preload()
 
 feedbackIncorrect = stimuli.TextLine(text='Pogrešno!',
-                                     text_colour=misc.constants.C_RED)
+                                     text_colour=misc.constants.C_RED,
+                                     text_bold=True)
 feedbackIncorrect.preload()
 
 subCode = ''
