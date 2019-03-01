@@ -133,7 +133,7 @@ expDesign = pd.read_csv(join('task_switching', 'trials', 'design.csv'))
 experiment = design.Experiment(name='Task switching',
                                foreground_colour=(0, 0, 0),
                                background_colour=misc.constants.C_GREY,
-                               text_font='Courier', text_size=22)
+                               text_font='Courier New', text_size=24)
 
 control.initialize(experiment)
 
@@ -168,7 +168,7 @@ for blockNo in expDesign.blockCnt.unique():
         trial.set_factor('task', task)
 
         stimulus = stimuli.TextLine(text=str(row[1].stimulus),
-                                    text_size=22, text_font='Courier',
+                                    text_size=22, text_font='Courier New',
                                     text_bold=True)
 
         backBox = stimuli.Rectangle(size=(200, 200), colour=bgColor)
@@ -276,8 +276,8 @@ for i, block in enumerate(experiment.blocks):
 
         trial.stimuli[0].present()
 
-        key, rt = experiment.keyboard.wait([misc.constants.K_a,
-                                            misc.constants.K_l],
+        key, rt = experiment.keyboard.wait([misc.constants.K_LCTRL,
+                                            misc.constants.K_RCTRL],
                                            duration=stimDuration)
 
         if feedFlag:

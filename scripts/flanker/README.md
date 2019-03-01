@@ -14,6 +14,7 @@ Developed using the `pipenv` packaging tool (https://github.com/pypa/pipenv).
 
 ## TODO:
 
-- [ ] test on Windows
+- [x] test on Windows
 - [ ] compile to `exe`
-- [ ] set correct number of blocks and trials
+- [x] set correct number of blocks and trials
+- [x] set CTRLs as response keys

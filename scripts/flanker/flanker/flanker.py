@@ -60,9 +60,9 @@ Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj"\
 Svoj unos potvrdite pritiskom tipke ENTER.'''
 
 # experiment variables
-trialsPerCondInTest = 4
-trialPerCondInPractice = 2
-numTestBlocks = 2
+trialsPerCondInTest = 40
+trialPerCondInPractice = 32
+numTestBlocks = 4
 numPracticeBlocks = 1
 
 fixCrossDuration = 500
@@ -76,15 +76,15 @@ factorStimuli = {'congruent': ['HHHKHHH', 'KKKHKKK', 'CCCSCCC', 'SSSCSSS'],
                  'same': ['HHHHHHH', 'KKKKKKK', 'SSSSSSS', 'CCCCCCC'],
                  'control': ['H', 'C', 'S', 'K']}
 
-keyDict = {'97': 'A', '108': 'L'}
+keyDict = {'306': 'LCTRL', '305': 'RCTRL'}
 
-correctResponses = {'K': misc.constants.K_l, 'H': misc.constants.K_l,
-                    'C': misc.constants.K_a, 'S': misc.constants.K_a}
+correctResponses = {'K': misc.constants.K_RCTRL, 'H': misc.constants.K_RCTRL,
+                    'C': misc.constants.K_LCTRL, 'S': misc.constants.K_LCTRL}
 
 # experiment setup
 experiment = design.Experiment(name='Flanker', foreground_colour=(0, 0, 0),
                                background_colour=(255, 255, 255),
-                               text_font='Courier', text_size=22)
+                               text_font='Courier New', text_size=24)
 
 # initialize experiment
 control.initialize(experiment)
@@ -184,8 +184,8 @@ for blockNo, block in enumerate(experiment.blocks):
             fixCross.present()
             experiment.clock.wait(fixCrossDuration)
             trial.stimuli[0].present()
-            key, rt = experiment.keyboard.wait([misc.constants.K_a,
-                                                misc.constants.K_l])
+            key, rt = experiment.keyboard.wait([misc.constants.K_LCTRL,
+                                                misc.constants.K_RCTRL])
             if key == correctResponses[target]:
                 feedbackCorrect.present()
                 experiment.clock.wait(1000)
@@ -216,8 +216,8 @@ for blockNo, block in enumerate(experiment.blocks):
             fixCross.present()
             experiment.clock.wait(fixCrossDuration)
             trial.stimuli[0].present()
-            key, rt = experiment.keyboard.wait([misc.constants.K_a,
-                                                misc.constants.K_l])
+            key, rt = experiment.keyboard.wait([misc.constants.K_LCTRL,
+                                                misc.constants.K_RCTRL])
             if key == correctResponses[target]:
                 isCorrect = 1
             else:

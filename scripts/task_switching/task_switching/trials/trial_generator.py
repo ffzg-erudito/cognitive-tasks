@@ -38,10 +38,10 @@ factorStimuli = {'high-low': {'isHigher': [6, 7, 8, 9],
                  'odd-even': {'isOdd': [1, 3, 7, 9],
                               'isEven': [2, 4, 6, 8]}}
 
-correctResponses = {'isHigher': misc.constants.K_l,
-                    'isEven': misc.constants.K_l,
-                    'isLower': misc.constants.K_a,
-                    'isOdd': misc.constants.K_a}
+correctResponses = {'isHigher': misc.constants.K_RCTRL,
+                    'isEven': misc.constants.K_RCTRL,
+                    'isLower': misc.constants.K_LCTRL,
+                    'isOdd': misc.constants.K_LCTRL}
 
 # generating pure blocks
 numPureBlocks = numBlocks.get('practicePureFeed') +\
