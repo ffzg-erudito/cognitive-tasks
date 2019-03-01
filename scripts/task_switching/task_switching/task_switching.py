@@ -48,9 +48,9 @@ Pritisnite ENTER za nastavak upute.'''
 
 instructionsOddEvenPractice = '''Sada ćete uvježbavati procjenu parnosti broja.
 
-Ako je prikazani broj PARAN, pritisnite tipku L na tipkovnici.
+Ako je prikazani broj PARAN, pritisnite DESNU CTRL tipku na tipkovnici.
 
-Ako je prikazani broj NEPARAN, pritisnite tipku A na tipkovnici.
+Ako je prikazani broj NEPARAN, pritisnite LIJEVU CTRL tipku na tipkovnici.
 
 Proći ćete kroz nekoliko zadataka za uvježbavanje, pri čemu ćete dobivati\
  povratnu informaciju o točnosti.
@@ -67,9 +67,9 @@ Ako imate pitanja, sad je dobro vrijeme za postaviti ih. U protivnom,\
 
 instructionsHighLowPractice = '''Sada ćete uvježbavati procjenu veličine broja.
 
-Ako je prikazani broj VEĆI od 5, pritisnite tipku L na tipkovnici.
+Ako je prikazani broj VEĆI od 5, pritisnite DESNU CTRL tipku na tipkovnici.
 
-Ako je prikazani broj MANJI od 5, pritisnite tipku A na tipkovnici.
+Ako je prikazani broj MANJI od 5, pritisnite LIJEVU CTRL tipku na tipkovnici.
 
 Sad ćete proći kroz nekoliko zadataka za uvježbavanje, pri čemu ćete dobivati\
  povratnu informaciju o točnosti.

@@ -25,15 +25,15 @@ Na sredini zaslona će se pojavljivati slova. Nekad će Vam biti prikazano\
  sedam slova, a nekad samo jedno.
 
 Ako Vam računalo prikaže sedam slova, Vaš će zadatak biti identificirati slovo\
- u sredini. Ako se u sredini nalazi H ili K, pritisnite tipku L. Ako se u\
- sredini nalazi slovo C ili S, pritisnite tipku A.
+ u sredini. Ako se u sredini nalazi H ili K, pritisnite DESNU CTRL tipku. Ako\
+ se u sredini nalazi slovo C ili S, pritisnite LIJEVU CTRL tipku.
 Pritom trebate zanemarivati slova koja se nalaze oko slova u sredini.
 
 Pritisnite ENTER za nastavak upute.'''
 
 instructionsText2 = '''Ako Vam račualo prikaže samo jedno slovo, odgovorite\
- koje je slovo prikazano koristeći ranije navedene tipke (L ako je slovo H ili\
- K,  A ako je slovo C ili S.)
+ koje je slovo prikazano koristeći ranije navedene tipke (DESNI CTRL ako je\
+ slovo H ili K, LIJEVI CTRL ako je slovo C ili S.)
 
 Sada ćete proći kroz nekoliko zadatka za vježbu, u kojima ćete dobivati\
  povratnu informaciju o svom uratku.

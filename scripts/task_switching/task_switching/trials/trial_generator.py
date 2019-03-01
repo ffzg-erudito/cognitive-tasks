@@ -101,6 +101,9 @@ for segment in expSchema[numPureBlocks:]:
 
 experiment.save_design(join('task_switching', 'trials', 'design.csv'))
 
+# removed the first few lines of the file manually. they contain unnecessary
+# info which causes pandas to have headaches
+
 # generating csv with stimuli
 expDesign = pd.read_csv(join('task_switching', 'trials', 'design.csv'))
 
@@ -133,7 +136,7 @@ for segment in expSchema:
 
 expDesign = pd.concat([expDesign, pd.DataFrame(blockInfo)], axis=1)
 
-expDesign = expDesign.drop(['blockId', 'trialId'], axis=1)
+expDesign = expDesign.drop(['block_id', 'trial_id'], axis=1)
 
 # adding stimuli
 # tracking last appearance of a number and last use of response key
