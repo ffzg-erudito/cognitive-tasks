@@ -149,8 +149,8 @@ experiment.add_data_variable_names(['subjectNo',
 
 # creating blocks
 experiment.clear_blocks()
-for blockNo in expDesign.blockCnt.unique():
-    rows = expDesign[expDesign.blockCnt == blockNo]
+for blockNo in expDesign.block_cnt.unique():
+    rows = expDesign[expDesign.block_cnt == blockNo]
 
     blockName = rows.blockName.unique()[0]
 
@@ -266,8 +266,8 @@ for i, block in enumerate(experiment.blocks):
         blank.present()
         experiment.clock.wait(blankDuration)
 
-        designRow = expDesign[(expDesign.blockCnt == i) &
-                              (expDesign.trialCnt == j)]
+        designRow = expDesign[(expDesign.block_cnt == i) &
+                              (expDesign.trial_cnt == j)]
 
         correctResponse = designRow.correctResponse.values[0]
         task = trial.get_factor('task')
