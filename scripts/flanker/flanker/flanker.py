@@ -60,8 +60,8 @@ Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj"\
 Svoj unos potvrdite pritiskom tipke ENTER.'''
 
 # experiment variables
-trialsPerCondInTest = 40
-trialPerCondInPractice = 32
+trialsPerCondInTest = 10
+trialPerCondInPractice = 8
 numTestBlocks = 4
 numPracticeBlocks = 1
 
