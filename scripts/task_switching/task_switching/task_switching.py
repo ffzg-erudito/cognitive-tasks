@@ -23,7 +23,7 @@ blankDuration = 100
 stimDuration = 1500
 
 # instructions
-instructionsIntro = '''Sad ćete rješavati jedan zadatak biranog reagiranja.
+instructionsIntro = '''Sad ćete rješavati jedan zadatak izmjenjujućeg pravila.
 
 Na sredini zaslona će se pojavljivati brojke od 1 do 9, osim broja 5, a Vaš će\
  zadatak biti da donesete jednu od dvije moguće procjene.
