@@ -21,7 +21,7 @@ control.defaults.fast_quit = False
 
 # instructions
 instructionsText1 = '''Sada ćete rješavati računalni zadatak pažnje.
-Na sredini zaslona će se pojavljivati slova. Nekad će Vam biti prikazano\
+Na sredini zaslona će se pojavljivati nizovi slova. Nekad će Vam biti prikazano\
  sedam slova, a nekad samo jedno.
 
 Ako Vam računalo prikaže sedam slova, Vaš će zadatak biti identificirati slovo\
