@@ -87,16 +87,16 @@ Ako imate pitanja, sad je dobro vrijeme za postaviti ih. U protivnom,\
 instructionsMixed = '''U ostatku zadatka, procjene parnosti i veličine\
  prikazanog broja pravilno će se izmjenjivati.
 
-Napominjemo, ako je Vaš zadatak procijeniti PARNOST broja, broj će biti\
- prikazan u BIJELOM kvadratu.
+Napominjemo, ako je broj prikazan u BIJELOM kvadratu, trebate procijeniti\
+ njegovu PARNOST.
 
-Ako je Vaš zadatak procijeniti VELIČINU broja, broj će biti prikazan u\
- SIVOM kvadratu.
+Ako je broj prikazan u SIVOM kvadratu, trebate procijeniti\
+ njegovu VELIČINU.
 
 Pritisnite ENTER za nastavak upute.'''
 
 instructionsMixedPractice = '''Sada slijedi nekoliko zadataka za uvježbavanje,\
- u kojima ćete dobivati povratnu informaciju u svojoj točnosti.
+ u kojima ćete dobivati povratnu informaciju o svojoj točnosti.
 
 Pritisnite ENTER kako biste započeli zadatke za uvježbavanje.'''
 
@@ -107,7 +107,7 @@ Slijede testni zadaci, u kojima nećete dobivati povratnu informaciju o svojoj\
 
 Zadaci su podijeljeni u dva bloka, između kojih možete uzeti pauzu.
 
-Stoga, pokušajte raditi što brže i što točnije možete.
+Pokušajte raditi što brže i što točnije možete.
 
 Ako imate pitanja, sad je dobro vrijeme za postaviti ih. U protivnom,\
  pritisnite ENTER kako biste započeli s testnim zadacima.'''
