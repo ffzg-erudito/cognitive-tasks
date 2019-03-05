@@ -112,8 +112,8 @@ Pokušajte raditi što brže i što točnije možete.
 Ako imate pitanja, sad je dobro vrijeme za postaviti ih. U protivnom,\
  pritisnite ENTER kako biste započeli s testnim zadacima.'''
 
-subCodeText = '''Molimo Vas, unesite svoju šifru - prva dva slova imena majke,\
- posljednja dva slova imena oca i posljednje dvije znamenke broja mobilnog\
+subCodeText = '''Molimo Vas, unesite svoju šifru - prva dva slova imena oca,\
+ posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog\
  telefona.
 
 Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj"\

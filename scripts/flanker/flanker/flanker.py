@@ -50,8 +50,8 @@ Molimo Vas da zadatak pokušate rješavati što brže i što točnije možete.
 Ako imate pitanja, postavite ih sada. U protivnom, pritisnite ENTER za\
  nastavak.'''
 
-subCodeText = '''Molimo Vas, unesite svoju šifru - prva dva slova imena majke,\
- posljednja dva slova imena oca i posljednje dvije znamenke broja mobilnog\
+subCodeText = '''Molimo Vas, unesite svoju šifru - prva dva slova imena oca,\
+ posljednja dva slova imena majke i posljednje dvije znamenke broja mobilnog\
  telefona.
 
 Pritom nemojte koristiti dijakritičke znakove, a slova poput "nj"\
