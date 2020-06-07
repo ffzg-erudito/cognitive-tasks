@@ -3,6 +3,8 @@
 # latent-variable analysis. Journal of experimental psychology: General,
 # 133(1), 101.
 import re
+import sys
+sys.path.insert(0, 'D:\\karijera\\ffzg_exp_psy\\repos\\cognitive-tasks\\scripts\\flanker\\flanker\\')
 
 from expyriment import control, design, io, misc, stimuli
 
